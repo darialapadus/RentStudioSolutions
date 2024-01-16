@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RentStudio.DataAccesLayer
+namespace RentStudio.Models
 {
-    public class RoomType
+    public class RoomTypeDTO
     {
-        [Key]
         public int RoomTypeId { get; set; }
 
         [Required]
@@ -12,10 +11,9 @@ namespace RentStudio.DataAccesLayer
         public string Name { get; set; } = "";
 
         [MaxLength(200)]
-        public string Facilities { get; set; } = "";
+        public required string Facilities { get; set; }
 
         [Required]
         public decimal Price { get; set; }
     }
-
 }

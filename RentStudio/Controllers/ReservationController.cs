@@ -1,77 +1,69 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentStudio.DataAccesLayer;
+using RentStudio.Models;
 
 namespace RentStudio.Controllers
 {
     public class ReservationController : BaseController
     {
         private readonly RentDbContext _context;
+
         public ReservationController(RentDbContext context)
         {
             _context = context;
-        }  
-
-        // GET: api/Reservation
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations()
-        {
-            return await _context.Reservations.ToListAsync();
         }
 
-        // GET: api/Reservation/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Reservation>> GetReservation(int id)
+        [HttpGet] //folosit pt requesturi de tip READ-citim/luam date din baza
+        public IActionResult GetReservations()
         {
-            var reservation = await _context.Reservations.FindAsync(id);
-
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            return reservation;
+            var reservations = _context.Reservations.ToList();
+            return Ok(reservations);
         }
 
-        // POST: api/Reservation
-        [HttpPost]
-        public async Task<ActionResult<Reservation>> PostReservation(Reservation reservation)
+        [HttpPost] //folosit pt requesturi de tip WRITE-scriem date in baza(inserez o linie noua in tabela reservations);HttpReq e format din Header si Body
+        public IActionResult AddReservations([FromBody] ReservationDTO reservation)
         {
-            _context.Reservations.Add(reservation);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetReservation", new { id = reservation.ReservationId }, reservation);
+            var entity = new Reservation();
+            entity.CheckInDate = reservation.CheckInDate;
+            entity.CheckOutDate = reservation.CheckOutDate;
+            entity.NumberOfRooms = reservation.NumberOfRooms;
+            entity.NumberOfGuests = reservation.NumberOfGuests;
+            entity.Status = reservation.Status;
+            entity.PaymentMethod = reservation.PaymentMethod;
+            entity.CustomerId = reservation.CustomerId;
+            _context.Reservations.Add(entity);
+            _context.SaveChanges();
+            return Ok(reservation);
         }
 
-        // PUT: api/Reservation/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReservation(int id, Reservation reservation)
+        public IActionResult UpdateReservation(int id, [FromBody] ReservationShortDTO updatedReservation)
         {
-            if (id != reservation.ReservationId)
-            {
-                return BadRequest();
-            }
+            var existingReservation = _context.Reservations.Find(id);
+            if (existingReservation == null)
+                return NotFound();
 
-            _context.Entry(reservation).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            existingReservation.CheckInDate = updatedReservation.CheckInDate;
+            existingReservation.CheckOutDate = updatedReservation.CheckOutDate;
+            existingReservation.NumberOfRooms = updatedReservation.NumberOfRooms;
+            existingReservation.NumberOfGuests = updatedReservation.NumberOfGuests;
 
-            return NoContent();
+            _context.SaveChanges();
+            return Ok(existingReservation);
         }
 
-        // DELETE: api/Reservation/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReservation(int id)
+        public IActionResult DeleteReservation(int id)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = _context.Reservations.Find(id);
             if (reservation == null)
-            {
                 return NotFound();
-            }
 
             _context.Reservations.Remove(reservation);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            _context.SaveChanges();
+            return Ok(reservation);
         }
+
     }
 }

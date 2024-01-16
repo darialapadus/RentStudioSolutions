@@ -17,7 +17,7 @@ namespace RentStudio.Controllers
         [HttpGet] //folosit pt requesturi de tip READ-citim/luam date din baza
         public IActionResult GetEmployees()
         {
-            var employees = _context.Employees.Include(x=>x.Hotel).ToList();
+            var employees = _context.Employees.ToList(); //var employees = _context.Employees.Include(x=>x.Hotel).ToList(); inseamna ca aduce si datele despre hoteluri intr-o singura cerere
             return Ok(employees);
         }
 
@@ -46,7 +46,6 @@ namespace RentStudio.Controllers
 
             existingEmployee.FirstName = updatedEmployee.FirstName;
             existingEmployee.Position = updatedEmployee.Position;
-            // Update other properties as needed
 
             _context.SaveChanges();
             return Ok(existingEmployee);
