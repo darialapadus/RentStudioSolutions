@@ -25,6 +25,8 @@ namespace RentStudio.DataAccesLayer
         [Required]
         [MaxLength(50)]
         public string City { get; set; } = "";
+
+        public virtual ICollection<Reservation> Reservations { get; set; } //add after
     }
 
 }

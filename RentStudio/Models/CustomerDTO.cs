@@ -25,5 +25,8 @@ namespace RentStudio.Models
         [Required]
         [MaxLength(50)]
         public string City { get; set; } = "";
+
+        public List<ReservationDTO> Reservations { get; set; }
+
     }
 }

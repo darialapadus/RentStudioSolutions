@@ -58,5 +58,69 @@ namespace RentStudio.Controllers
             _context.SaveChanges();
             return Ok(reservationDetail);
         }
+
+        // GROUPBY pentru a grupa detaliile rezervarilor in functie de solicitarile speciale.
+        [HttpGet("reservationdetails/grouped-by-requests")]
+        public IActionResult GetReservationDetailsGroupedByRequests()
+        {
+            var reservationDetailsGroupedByRequests = _context.ReservationDetails
+                .GroupBy(rd => rd.SpecialRequests)
+                .Select(group => new
+                {
+                    SpecialRequests = group.Key,
+                    ReservationDetails = group.ToList()
+                })
+                .ToList();
+
+            return Ok(reservationDetailsGroupedByRequests);
+        }
+
+        // WHERE pentru a obtine toate detaliile rezervarilor care au fost modificate recent.
+        [HttpGet("modified-reservationdetails")]
+        public IActionResult GetModifiedReservationDetails()
+        {
+            var modifiedReservationDetails = _context.ReservationDetails
+                .Where(rd => rd.LastModified != null)
+                .ToList();
+
+            return Ok(modifiedReservationDetails);
+        }
+
+        // JOIN intre ReservationDetails si Reservations pentru a obtine informatiile despre detaliile rezervarilor impreuna cu datele despre rezervari.
+        [HttpGet("reservationdetails-with-reservations")]
+        public IActionResult GetReservationDetailsWithReservations()
+        {
+            var reservationDetailsWithReservations = _context.ReservationDetails
+                .Join(
+                    _context.Reservations,
+                    reservationDetail => reservationDetail.ReservationId,
+                    reservation => reservation.ReservationId,
+                    (reservationDetail, reservation) => new
+                    {
+                        ReservationDetail = new ReservationDetailDTO
+                        {
+                            ReservationId = reservationDetail.ReservationId,
+                            SpecialRequests = reservationDetail.SpecialRequests,
+                            LastModified = reservationDetail.LastModified,
+                            BillingInformation = reservationDetail.BillingInformation
+                        },
+                        Reservation = new ReservationDTO
+                        {
+                            ReservationId = reservation.ReservationId,
+                            CheckInDate = reservation.CheckInDate,
+                            CheckOutDate = reservation.CheckOutDate,
+                            NumberOfRooms = reservation.NumberOfRooms,
+                            NumberOfGuests = reservation.NumberOfGuests,
+                            Status = reservation.Status,
+                            PaymentMethod = reservation.PaymentMethod,
+                            CustomerId = reservation.CustomerId
+                        }
+                    })
+                .ToList();
+
+            return Ok(reservationDetailsWithReservations);
+        }
+
+
     }
 }

@@ -10,8 +10,8 @@ namespace RentStudio.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Students");
+            //migrationBuilder.DropTable(
+             //   name: "Students");
         }
 
         /// <inheritdoc />

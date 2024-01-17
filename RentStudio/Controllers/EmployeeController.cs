@@ -62,5 +62,103 @@ namespace RentStudio.Controllers
             _context.SaveChanges();
             return Ok(employee);
         }
+
+        //GROUPBY pentru a grupa angajatii in functie de pozitia pe care o ocupa.
+        [HttpGet("employees/grouped-by-position")]
+        public IActionResult GetEmployeesGroupedByPosition()
+        {
+            var employeesGroupedByPosition = _context.Employees
+                .GroupBy(e => e.Position)
+                .Select(group => new
+                {
+                    Position = group.Key,
+                    Employees = group.ToList()
+                })
+                .ToList();
+
+            return Ok(employeesGroupedByPosition);
+        }
+
+        //WHERE pentru a obtine toti angajatii care lucreaza la un anumit hotel.
+        [HttpGet("employees-at-hotel/{hotelId}")]
+        public IActionResult GetEmployeesAtHotel(int hotelId)
+        {
+            var employeesAtHotel = _context.Employees
+                .Where(e => e.HotelId == hotelId)
+                .ToList();
+
+            return Ok(employeesAtHotel);
+        }
+
+        //JOIN intre Employees si Hotels pentru a obtine informatiile despre angajati impreuna cu datele despre hoteluri.
+        [HttpGet("employees-with-hotels")]
+        public IActionResult GetEmployeesWithHotels()
+        {
+            var employeesWithHotels = _context.Employees
+                .Join(
+                    _context.Hotels,
+                    employee => employee.HotelId,
+                    hotel => hotel.HotelId,
+                    (employee, hotel) => new
+                    {
+                        Employee = new EmployeeDTO
+                        {
+                            EmployeeId = employee.EmployeeId,
+                            FirstName = employee.FirstName,
+                            LastName = employee.LastName,
+                            Gender = employee.Gender,
+                            Age = employee.Age,
+                            Position = employee.Position,
+                            Salary = employee.Salary,
+                            HotelId = employee.HotelId
+                        },
+                        Hotel = new HotelDTO
+                        {
+                            HotelId = hotel.HotelId,
+                            Name = hotel.Name,
+                            Rating = hotel.Rating,
+                            Address = hotel.Address
+                        }
+                    })
+                .ToList();
+
+            return Ok(employeesWithHotels);
+        }
+
+
+        //INCLUDE pentru a incarca toate detaliile despre angajati impreuna cu informatiile despre hoteluri.
+        [HttpGet("employees-with-details")]
+        public IActionResult GetEmployeesWithDetails()
+        {
+            var employeesWithDetails = _context.Employees
+                .Include(e => e.Hotel)
+                .Select(employee => new
+                {
+                    Employee = new EmployeeDTO
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        FirstName = employee.FirstName,
+                        LastName = employee.LastName,
+                        Gender = employee.Gender,
+                        Age = employee.Age,
+                        Position = employee.Position,
+                        Salary = employee.Salary,
+                        HotelId = employee.HotelId
+                    },
+                    Hotel = new HotelDTO
+                    {
+                        HotelId = employee.Hotel.HotelId,
+                        Name = employee.Hotel.Name,
+                        Rating = employee.Hotel.Rating,
+                        Address = employee.Hotel.Address
+                    }
+                })
+                .ToList();
+
+            return Ok(employeesWithDetails);
+        }
+
+
     }
+
 }

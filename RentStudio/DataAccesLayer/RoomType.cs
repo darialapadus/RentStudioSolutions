@@ -16,6 +16,8 @@ namespace RentStudio.DataAccesLayer
 
         [Required]
         public decimal Price { get; set; }
+
+        public virtual ICollection<Room> Rooms { get; set; } //add after
     }
 
 }

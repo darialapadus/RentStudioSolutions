@@ -37,6 +37,11 @@ namespace RentStudio.DataAccesLayer
             modelBuilder.Entity<RoomType>()
                 .Property(rt => rt.Price)
                 .HasColumnType("decimal(18, 2)");
+
+            modelBuilder.Entity<Customer>()
+                .HasMany(c => c.Reservations)
+                .WithOne(r => r.Customer)
+                .HasForeignKey(r => r.CustomerId);
         }
 
 

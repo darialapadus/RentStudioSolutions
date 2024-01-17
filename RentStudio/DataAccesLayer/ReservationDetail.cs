@@ -8,7 +8,6 @@ namespace RentStudio.DataAccesLayer
         [Key]
         [ForeignKey("Reservation")]
         public int ReservationId { get; set; } 
-
         public virtual Reservation Reservation { get; set; }
 
         public string? SpecialRequests { get; set; }
