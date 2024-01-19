@@ -28,4 +28,11 @@ namespace RentStudio.Models
 
         public int HotelId { get; set; }
     }
+    public class GroupedEmployeesDTO
+    {
+        public string Position { get; set; }
+        public IEnumerable<EmployeeDTO> Employees { get; set; }
+    }
+
+
 }

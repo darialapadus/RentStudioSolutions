@@ -24,5 +24,11 @@ namespace RentStudio.Models
 
         [ForeignKey("CustomerId")]
         public int CustomerId { get; set; }
+        public ReservationDetailDTO ReservationDetail { get; set; }
+    }
+    public class GroupedReservationsByStatusDTO
+    {
+        public string Status { get; set; }
+        public List<ReservationDTO> Reservations { get; set; }
     }
 }

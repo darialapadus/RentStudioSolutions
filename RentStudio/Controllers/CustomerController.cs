@@ -1,161 +1,71 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RentStudio.Controllers;
 using RentStudio.DataAccesLayer;
 using RentStudio.Models;
+using RentStudio.Services;
 
 namespace RentStudio.Controllers
 {
     public class CustomerController : BaseController
     {
-        private readonly RentDbContext _context;
+        private readonly ICustomerService _customerService;
 
-        public CustomerController(RentDbContext context)
+        public CustomerController(ICustomerService customerService)
         {
-            _context = context;
+            _customerService = customerService;
         }
 
-        [HttpGet] //folosit pt requesturi de tip READ-citim/luam date din baza
+        [HttpGet]
         public IActionResult GetCustomers()
         {
-            var customers = _context.Customers.ToList();
+            var customers = _customerService.GetCustomers();
             return Ok(customers);
         }
 
-        [HttpPost] //folosit pt requesturi de tip WRITE-scriem date in baza(inserez o linie noua in tabela customers);HttpReq e format din Header si Body
-        public IActionResult AddCustomers([FromBody] CustomerDTO customer)
+        [HttpPost]
+        public IActionResult AddCustomer([FromBody] CustomerDTO customerDto)
         {
-            var entity = new Customer();
-            entity.FirstName = customer.FirstName;
-            entity.LastName = customer.LastName;
-            entity.Email = customer.Email;
-            entity.Phone = customer.Phone;  
-            entity.City = customer.City;
-            _context.Customers.Add(entity);
-            _context.SaveChanges();
-            return Ok(customer);
+            _customerService.AddCustomer(customerDto);
+            return Ok();
         }
 
         [HttpPut("{id}")]
         public IActionResult UpdateCustomer(int id, [FromBody] CustomerShortDTO updatedCustomer)
         {
-            var existingCustomer = _context.Customers.Find(id);
-            if (existingCustomer == null)
-                return NotFound();
-
-            existingCustomer.Email = updatedCustomer.Email;
-            existingCustomer.Phone = updatedCustomer.Phone;
-
-            _context.SaveChanges();
-            return Ok(existingCustomer);
+            _customerService.UpdateCustomer(id, updatedCustomer);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteCustomer(int id)
         {
-            var customer = _context.Customers.Find(id);
-            if (customer == null)
-                return NotFound();
-
-            _context.Customers.Remove(customer);
-            _context.SaveChanges();
-            return Ok(customer);
+            _customerService.DeleteCustomer(id);
+            return Ok();
         }
 
-        // GROUPBY pentru a grupa clientii in functie de oras.
-        [HttpGet("customers/grouped-by-city")]
+        [HttpGet("grouped-by-city")]
         public IActionResult GetCustomersGroupedByCity()
         {
-            var customersGroupedByCity = _context.Customers
-                .GroupBy(c => c.City)
-                .Select(group => new
-                {
-                    City = group.Key,
-                    Customers = group.ToList()
-                })
-                .ToList();
-
+            var customersGroupedByCity = _customerService.GetCustomersGroupedByCity();
             return Ok(customersGroupedByCity);
         }
 
-        // WHERE pentru a obtine toti clientii cu un anumit nume.
-        [HttpGet("customers-with-first-name/{firstName}")]
+        [HttpGet("with-first-name/{firstName}")]
         public IActionResult GetCustomersWithFirstName(string firstName)
         {
-            var customersWithFirstName = _context.Customers
-                .Where(c => c.FirstName == firstName)
-                .ToList();
-
+            var customersWithFirstName = _customerService.GetCustomersWithFirstName(firstName);
             return Ok(customersWithFirstName);
         }
 
-        // JOIN intre Customers si Reservations pentru a obtine informatiile despre clienti impreuna cu datele despre rezervari.
-        [HttpGet("customers-with-reservations")]
+        [HttpGet("with-reservations")]
         public IActionResult GetCustomersWithReservations()
         {
-            var customersWithReservations = _context.Customers
-                .Join(
-                    _context.Reservations,
-                    customer => customer.CustomerId,
-                    reservation => reservation.CustomerId,
-                    (customer, reservation) => new
-                    {
-                        Customer = new CustomerDTO
-                        {
-                            CustomerId = customer.CustomerId,
-                            FirstName = customer.FirstName,
-                            LastName = customer.LastName,
-                            Email = customer.Email,
-                            Phone = customer.Phone,
-                            City = customer.City
-                        },
-                        Reservation = new ReservationDTO
-                        {
-                            ReservationId = reservation.ReservationId,
-                            CheckInDate = reservation.CheckInDate,
-                            CheckOutDate = reservation.CheckOutDate,
-                            NumberOfRooms = reservation.NumberOfRooms,
-                            NumberOfGuests = reservation.NumberOfGuests,
-                            Status = reservation.Status,
-                            PaymentMethod = reservation.PaymentMethod,
-                            CustomerId = reservation.CustomerId
-                        }
-                    })
-                .ToList();
-
+            var customersWithReservations = _customerService.GetCustomersWithReservations();
             return Ok(customersWithReservations);
-        }
-
-
-        // INCLUDE pentru a incarca toate detaliile despre clienti impreuna cu informatiile despre rezervarile existente.
-        [HttpGet("customers-with-details")]
-        public IActionResult GetCustomersWithDetails()
-        {
-            var customersWithDetails = _context.Customers
-                .Include(c => c.Reservations)
-                .Select(customer => new CustomerDTO
-                {
-                    CustomerId = customer.CustomerId,
-                    FirstName = customer.FirstName,
-                    LastName = customer.LastName,
-                    Email = customer.Email,
-                    Phone = customer.Phone,
-                    City = customer.City,
-                    Reservations = customer.Reservations.Select(reservation => new ReservationDTO
-                    {
-                        ReservationId = reservation.ReservationId,
-                        CheckInDate = reservation.CheckInDate,
-                        CheckOutDate = reservation.CheckOutDate,
-                        NumberOfRooms = reservation.NumberOfRooms,
-                        NumberOfGuests = reservation.NumberOfGuests,
-                        Status = reservation.Status,
-                        PaymentMethod = reservation.PaymentMethod,
-                        CustomerId = reservation.CustomerId
-                    }).ToList()
-                })
-                .ToList();
-
-            return Ok(customersWithDetails);
         }
 
     }
 }
+
+
