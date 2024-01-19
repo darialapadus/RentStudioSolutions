@@ -44,6 +44,7 @@ namespace RentStudio.Controllers
             return Ok();
         }
 
+        //GROUPBY pentru a grupa angajatii in functie de pozitia pe care o ocupa.
         [HttpGet("employees/grouped-by-position")]
         public IActionResult GetEmployeesGroupedByPosition()
         {
@@ -51,6 +52,7 @@ namespace RentStudio.Controllers
             return Ok(employeesGroupedByPosition);
         }
 
+        //WHERE pentru a obtine toti angajatii care lucreaza la un anumit hotel.
         [HttpGet("employees-at-hotel/{hotelId}")]
         public IActionResult GetEmployeesAtHotel(int hotelId)
         {
@@ -58,6 +60,7 @@ namespace RentStudio.Controllers
             return Ok(employeesAtHotel);
         }
 
+        //JOIN intre Employees si Hotels pentru a obtine informatiile despre angajati impreuna cu datele despre hoteluri.
         [HttpGet("employees-with-hotels")]
         public IActionResult GetEmployeesWithHotels()
         {

@@ -116,6 +116,7 @@ namespace RentStudio.Repositories
 
             return confirmedReservationsDTO;
         }
+
         public IEnumerable<ReservationDTO> GetReservationsWithDetails()
         {
             var reservationsWithDetails = _context.Reservations

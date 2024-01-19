@@ -42,18 +42,24 @@ namespace RentStudio.Controllers
             _reservationService.DeleteReservation(id);
             return Ok();
         }
+
+        //GROUPBY pentru a grupa rezervarile in functie de status.
         [HttpGet("reservations/grouped-by-status")]
         public IActionResult GetReservationsGroupedByStatus()
         {
            var reservationsGroupedByStatus = _reservationService.GetGroupedReservationsByStatus();
             return Ok(reservationsGroupedByStatus);
         }
+
+        //WHERE pentru a obtine toate rezervarile care au fost confirmate.
         [HttpGet("confirmed-reservations")]
         public IActionResult GetConfirmedReservations()
         {
             var confirmedReservations = _reservationService.GetConfirmedReservations();
             return Ok(confirmedReservations);
         }
+
+        //INCLUDE pentru a incarca toate detaliile rezervarilor impreuna cu informatiile despre rezervari.
         [HttpGet("reservations-with-details")]
         public IActionResult GetReservationsWithDetails()
         {

@@ -35,6 +35,7 @@ namespace RentStudio.Controllers
             _reservationDetailService.UpdateReservationDetail(id, updatedReservationDetail);
             return Ok();
         }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteReservationDetail(int id)
         {
@@ -42,5 +43,30 @@ namespace RentStudio.Controllers
             return Ok();
         }
 
+        // GROUPBY pentru a grupa detaliile rezervarilor in functie de solicitarile speciale.
+        [HttpGet("reservationdetails")]
+        public IActionResult GetReservationDetailsGroupedByRequests()
+        {
+            var reservationDetails = _reservationDetailService.GetReservationDetails();
+            return Ok(reservationDetails);
+        }
+
+        // WHERE pentru a obtine toate detaliile rezervarilor care au fost modificate recent.
+        [HttpGet("modified-reservationdetails")]
+        public IActionResult GetModifiedReservationDetails()
+        {
+            var modifiedReservationDetails = _reservationDetailService.GetModifiedReservationDetails();
+
+            return Ok(modifiedReservationDetails);
+        }
+
+        // JOIN intre ReservationDetails si Reservations pentru a obtine informatiile despre detaliile rezervarilor impreuna cu datele despre rezervari.
+        [HttpGet("reservationdetails/grouped-by-requests")]
+        public IActionResult GetReservationDetailsWithReservations()
+        {
+            var reservationDetailsGroupedByRequests = _reservationDetailService.GetReservationDetailsGroupedByRequests(); // Aici se utilizează metoda din serviciu care returnează ReservationDetailGroupedByRequestsDTO
+
+            return Ok(reservationDetailsGroupedByRequests);
+        }
     }
 }

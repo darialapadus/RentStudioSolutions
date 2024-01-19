@@ -11,6 +11,7 @@ namespace RentStudio.Services
         {
             _hotelRepository = hotelRepository;
         }
+
         public IEnumerable<HotelDTO> GetHotels()
         {
             var hotels = _hotelRepository.GetHotels();
@@ -28,23 +29,26 @@ namespace RentStudio.Services
             _hotelRepository.AddHotel(hotelDto);
         }
 
-        public void DeleteHotel(int id)
-        {
-            _hotelRepository.DeleteHotel(id);
-        }
-
         void IHotelService.UpdateHotel(int id, HotelShortDTO updatedHotel)
         {
             _hotelRepository.UpdateHotel(id, updatedHotel);
         }
+
+        public void DeleteHotel(int id)
+        {
+            _hotelRepository.DeleteHotel(id);
+        }
+        
         public IEnumerable<GroupedHotelsByRatingDTO> GetHotelsGroupedByRating()
         {
             return _hotelRepository.GetHotelsGroupedByRating();
         }
+
         public IEnumerable<HotelDTO> GetHotelsWithAddress(string address)
         {
             return _hotelRepository.GetHotelsWithAddress(address);
         }
+
         public IEnumerable<HotelWithRoomsDTO> GetHotelsWithRooms()
         {
             return _hotelRepository.GetHotelsWithRooms();

@@ -10,4 +10,9 @@ namespace RentStudio.Models
         public DateTime? LastModified { get; set; }
         public string? BillingInformation { get; set; }
     }
+    public class ReservationDetailGroupedByRequestsDTO
+    {
+        public string SpecialRequests { get; set; }
+        public List<ReservationDetailDTO> ReservationDetails { get; set; }
+    }
 }

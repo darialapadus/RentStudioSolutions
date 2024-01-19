@@ -28,18 +28,15 @@ namespace RentStudio.Models
         public string City { get; set; } = "";
 
         public List<ReservationDTO> Reservations { get; set; }
-
     }
     public class GroupedCustomersDTO
     {
         public string City { get; set; }
         public List<Customer> Customers { get; set; }
     }
-
     public class CustomerWithReservationsDTO
     {
         public CustomerDTO Customer { get; set; }
         public ReservationDTO Reservation { get; set; }
     }
-
 }

@@ -33,6 +33,4 @@ namespace RentStudio.Models
         public string Position { get; set; }
         public IEnumerable<EmployeeDTO> Employees { get; set; }
     }
-
-
 }

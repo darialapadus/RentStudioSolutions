@@ -14,6 +14,11 @@ namespace RentStudio.Services
             _employeeRepository = employeeRepository;
         }
 
+        bool IEmployeeService.Save()
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<EmployeeDTO> GetEmployees()
         {
             var employees = _employeeRepository.GetEmployees();
@@ -43,11 +48,6 @@ namespace RentStudio.Services
         public void DeleteEmployee(int id)
         {
             _employeeRepository.DeleteEmployee(id);
-        }
-
-        bool IEmployeeService.Save()
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<GroupedEmployeesDTO> GetEmployeesGroupedByPosition()

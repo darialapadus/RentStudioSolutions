@@ -5,7 +5,6 @@ namespace RentStudio.Repositories
 {
     public interface IEmployeeRepository
     {
-       // List<Employee> GetEmployees(); 
         IEnumerable<Employee> GetEmployees();
         void AddEmployee(EmployeeDTO employeeDto);
         void UpdateEmployee(int id, EmployeeShortDTO updatedEmployee);
@@ -14,7 +13,6 @@ namespace RentStudio.Repositories
         IEnumerable<GroupedEmployeesDTO> GetEmployeesGroupedByPosition();
         IEnumerable<EmployeeDTO> GetEmployeesAtHotel(int hotelId);
         IEnumerable<EmployeeWithHotelDTO> GetEmployeesWithHotels();
-
     }
     public class EmployeeWithHotelDTO
     {

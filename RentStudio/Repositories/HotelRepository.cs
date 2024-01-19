@@ -12,6 +12,16 @@ namespace RentStudio.Repositories
             _context = context;
         }
 
+        bool IHotelRepository.Save()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Hotel> GetHotels()
+        {
+            return _context.Hotels.ToList();
+        }
+
         public void AddHotel(HotelDTO hotelDto)
         {
             var entity = new Hotel
@@ -22,26 +32,6 @@ namespace RentStudio.Repositories
             };
             _context.Hotels.Add(entity);
             _context.SaveChanges();
-        }
-
-        public void DeleteHotel(int id)
-        {
-            var hotel = _context.Hotels.Find(id);
-            if (hotel != null)
-            {
-                _context.Hotels.Remove(hotel);
-                _context.SaveChanges();
-            }
-        }
-
-        public IEnumerable<Hotel> GetHotels()
-        {
-            return _context.Hotels.ToList();
-        }
-
-        bool IHotelRepository.Save()
-        {
-            throw new NotImplementedException();
         }
 
         public void UpdateHotel(int id, HotelShortDTO updatedHotel)
@@ -57,6 +47,16 @@ namespace RentStudio.Repositories
             _context.SaveChanges();
         }
 
+        public void DeleteHotel(int id)
+        {
+            var hotel = _context.Hotels.Find(id);
+            if (hotel != null)
+            {
+                _context.Hotels.Remove(hotel);
+                _context.SaveChanges();
+            }
+        }
+      
         public IEnumerable<GroupedHotelsByRatingDTO> GetHotelsGroupedByRating()
         {
             return _context.Hotels
@@ -88,6 +88,7 @@ namespace RentStudio.Repositories
                 })
                 .ToList();
         }
+
         public IEnumerable<HotelWithRoomsDTO> GetHotelsWithRooms()
         {
             var hotelsWithRooms = _context.Hotels

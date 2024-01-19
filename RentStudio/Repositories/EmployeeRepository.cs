@@ -13,6 +13,16 @@ namespace RentStudio.Repositories
             _context = context;
         }
 
+        public IEnumerable<Employee> GetEmployees()
+        {
+            return _context.Employees.Include(e => e.Hotel).ToList();
+        }
+
+        bool IEmployeeRepository.Save()
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddEmployee(EmployeeDTO employeeDto)
         {
             var entity = new Employee
@@ -30,21 +40,6 @@ namespace RentStudio.Repositories
             _context.SaveChanges();
         }
 
-        public void DeleteEmployee(int id)
-        {
-            var employee = _context.Employees.Find(id);
-            if (employee != null)
-            {
-                _context.Employees.Remove(employee);
-                _context.SaveChanges();
-            }
-        }
-
-        public IEnumerable<Employee> GetEmployees()
-        {
-            return _context.Employees.Include(e => e.Hotel).ToList();
-        }
-
         public void UpdateEmployee(int id, EmployeeShortDTO updatedEmployee)
         {
             var existingEmployee = _context.Employees.Find(id);
@@ -59,9 +54,14 @@ namespace RentStudio.Repositories
             _context.SaveChanges();
         }
 
-        bool IEmployeeRepository.Save()
+        public void DeleteEmployee(int id)
         {
-            throw new NotImplementedException();
+            var employee = _context.Employees.Find(id);
+            if (employee != null)
+            {
+                _context.Employees.Remove(employee);
+                _context.SaveChanges();
+            }
         }
 
         public IEnumerable<GroupedEmployeesDTO> GetEmployeesGroupedByPosition()
@@ -87,6 +87,7 @@ namespace RentStudio.Repositories
                 })
                 .ToList();
         }
+
         public IEnumerable<EmployeeDTO> GetEmployeesAtHotel(int hotelId)
         {
             return _context.Employees
@@ -104,6 +105,7 @@ namespace RentStudio.Repositories
                 })
                 .ToList();
         }
+
         public IEnumerable<EmployeeWithHotelDTO> GetEmployeesWithHotels()
         {
             return _context.Employees

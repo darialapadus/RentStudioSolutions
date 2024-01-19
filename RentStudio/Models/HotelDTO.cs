@@ -28,5 +28,4 @@ namespace RentStudio.Models
         public HotelDTO Hotel { get; set; }
         public IEnumerable<RoomDTO> Rooms { get; set; }
     }
-
 }

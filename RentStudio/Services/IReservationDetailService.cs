@@ -8,6 +8,9 @@ namespace RentStudio.Services
         void AddReservationDetail(ReservationDetailDTO reservationDetail);
         void UpdateReservationDetail(int id, ReservationDetailShortDTO updatedReservationDetail);
         void DeleteReservation(int id);
+        IEnumerable<ReservationDetailGroupedByRequestsDTO> GetReservationDetailsGroupedByRequests();
+        IEnumerable<ReservationDetailDTO> GetModifiedReservationDetails();
+        IEnumerable<ReservationDetailGroupedByRequestsDTO> GetReservationDetailsWithReservations();
 
     }
 }

@@ -12,10 +12,17 @@ namespace RentStudio.Repositories
         {
             _context = context;
         }
+
         public bool Save()
         {
             return _context.SaveChanges() > 0;
         }
+
+        public IEnumerable<Customer> GetCustomers()
+        {
+            return _context.Customers.Include(c => c.Reservations).ToList();
+        }
+
         public void AddCustomer(CustomerDTO customerDto)
         {
             var entity = new Customer
@@ -30,10 +37,7 @@ namespace RentStudio.Repositories
             _context.Customers.Add(entity);
             _context.SaveChanges();
         }
-        public IEnumerable<Customer> GetCustomers()
-        {
-            return _context.Customers.Include(c => c.Reservations).ToList();
-        }
+
         public void UpdateCustomer(int id, CustomerShortDTO updatedCustomer)
         {
             var existingCustomer = _context.Customers.Find(id);
@@ -47,6 +51,7 @@ namespace RentStudio.Repositories
 
             _context.SaveChanges();
         }
+
         public void DeleteCustomer(int id)
         {
             var customer = _context.Customers.Find(id);
@@ -56,6 +61,7 @@ namespace RentStudio.Repositories
                 _context.SaveChanges();
             }
         }
+
         public IEnumerable<GroupedCustomersDTO> GetCustomersGroupedByCity()
         {
             return _context.Customers

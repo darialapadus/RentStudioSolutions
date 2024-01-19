@@ -32,14 +32,17 @@ namespace RentStudio.Services
         {
             _reservationRepository.DeleteReservation(id);
         }
+
         public IEnumerable<GroupedReservationsByStatusDTO> GetGroupedReservationsByStatus()
         {
             return _reservationRepository.GetReservationsGroupedByStatus();
         }
+
         public IEnumerable<ReservationDTO> GetConfirmedReservations()
         {
             return _reservationRepository.GetConfirmedReservations();
         }
+
         public IEnumerable<ReservationDTO> GetReservationsWithDetails()
         {
             return _reservationRepository.GetReservationsWithDetails();

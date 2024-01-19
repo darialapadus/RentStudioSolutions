@@ -44,6 +44,7 @@ namespace RentStudio.Controllers
             return Ok();
         }
 
+        // GROUPBY pentru a grupa clientii in functie de oras.
         [HttpGet("grouped-by-city")]
         public IActionResult GetCustomersGroupedByCity()
         {
@@ -51,6 +52,7 @@ namespace RentStudio.Controllers
             return Ok(customersGroupedByCity);
         }
 
+        // WHERE pentru a obtine toti clientii cu un anumit nume.
         [HttpGet("with-first-name/{firstName}")]
         public IActionResult GetCustomersWithFirstName(string firstName)
         {
@@ -58,6 +60,7 @@ namespace RentStudio.Controllers
             return Ok(customersWithFirstName);
         }
 
+        // JOIN intre Customers si Reservations pentru a obtine informatiile despre clienti impreuna cu datele despre rezervari.
         [HttpGet("with-reservations")]
         public IActionResult GetCustomersWithReservations()
         {

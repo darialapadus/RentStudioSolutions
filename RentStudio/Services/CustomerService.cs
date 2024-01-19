@@ -12,6 +12,11 @@ namespace RentStudio.Services
             _customerRepository = customerRepository;
         }
 
+        public bool Save()
+        {
+            return _customerRepository.Save();
+        }
+
         public IEnumerable<CustomerDTO> GetCustomers()
         {
             var customers = _customerRepository.GetCustomers();
@@ -39,11 +44,6 @@ namespace RentStudio.Services
         public void DeleteCustomer(int id)
         {
             _customerRepository.DeleteCustomer(id);
-        }
-
-        public bool Save()
-        {
-            return _customerRepository.Save();
         }
 
         public IEnumerable<GroupedCustomersDTO> GetCustomersGroupedByCity()

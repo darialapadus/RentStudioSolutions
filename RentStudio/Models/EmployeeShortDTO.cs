@@ -4,7 +4,6 @@ namespace RentStudio.Models
 {
     public class EmployeeShortDTO
     {
-
         [Required]
         [MaxLength(50)]
         public string FirstName { get; set; } = "";

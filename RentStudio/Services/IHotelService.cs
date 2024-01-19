@@ -4,10 +4,10 @@ namespace RentStudio.Services
 {
     public interface IHotelService
     {
-        void AddHotel(HotelDTO hotelDto);
         IEnumerable<HotelDTO> GetHotels();
-        void DeleteHotel(int id);
+        void AddHotel(HotelDTO hotelDto);
         void UpdateHotel(int id, HotelShortDTO updatedHotel);
+        void DeleteHotel(int id);
         IEnumerable<GroupedHotelsByRatingDTO> GetHotelsGroupedByRating();
         IEnumerable<HotelDTO> GetHotelsWithAddress(string address);
         IEnumerable<HotelWithRoomsDTO> GetHotelsWithRooms();

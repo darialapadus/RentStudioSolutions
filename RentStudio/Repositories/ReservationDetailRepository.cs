@@ -1,4 +1,5 @@
-﻿using RentStudio.DataAccesLayer;
+﻿using Microsoft.EntityFrameworkCore;
+using RentStudio.DataAccesLayer;
 using RentStudio.Models;
 
 namespace RentStudio.Repositories
@@ -25,6 +26,7 @@ namespace RentStudio.Repositories
 
             return reservationDetailDTOs;
         }
+
         public void AddReservationDetail(ReservationDetailDTO reservationDetailDTO)
         {
             var entity = new ReservationDetail
@@ -50,6 +52,7 @@ namespace RentStudio.Repositories
 
             _context.SaveChanges();
         }
+
         public void DeleteReservationDetail(int id)
         {
             var reservationDetail = _context.ReservationDetails.Find(id);
@@ -58,6 +61,68 @@ namespace RentStudio.Repositories
                 _context.ReservationDetails.Remove(reservationDetail);
                 _context.SaveChanges();
             }
+        }
+
+        public IEnumerable<ReservationDetailGroupedByRequestsDTO> GetReservationDetailsGroupedByRequests()
+        {
+            var reservationDetailsGroupedByRequests = _context.ReservationDetails
+            .GroupBy(rd => rd.SpecialRequests)
+            .Select(group => new ReservationDetailGroupedByRequestsDTO
+            {
+                SpecialRequests = group.Key,
+                ReservationDetails = group.Select(rd => new ReservationDetailDTO
+                {
+                    ReservationId = rd.ReservationId,
+                    SpecialRequests = rd.SpecialRequests,
+                    LastModified = rd.LastModified,
+                    BillingInformation = rd.BillingInformation
+                }).ToList()
+            })
+        .ToList();
+
+            return reservationDetailsGroupedByRequests;
+        }
+
+        public IEnumerable<ReservationDetailDTO> GetModifiedReservationDetails()
+        {
+            var modifiedReservationDetails = _context.ReservationDetails
+                .Where(rd => rd.LastModified != null)
+                .Select(rd => new ReservationDetailDTO
+                {
+                    ReservationId = rd.ReservationId,
+                    SpecialRequests = rd.SpecialRequests,
+                    LastModified = rd.LastModified,
+                    BillingInformation = rd.BillingInformation
+                })
+                .ToList();
+
+            return modifiedReservationDetails;
+        }
+
+        public IEnumerable<ReservationDetailGroupedByRequestsDTO> GetReservationDetailsWithReservations()
+        {
+            var reservationDetailsWithReservations = _context.ReservationDetails
+                .Join(
+                    _context.Reservations,
+                    reservationDetail => reservationDetail.ReservationId,
+                    reservation => reservation.ReservationId,
+                    (reservationDetail, reservation) => new ReservationDetailGroupedByRequestsDTO
+                    {
+                        SpecialRequests = reservationDetail.SpecialRequests,
+                        ReservationDetails = new List<ReservationDetailDTO>
+                        {
+                        new ReservationDetailDTO
+                        {
+                            ReservationId = reservationDetail.ReservationId,
+                            SpecialRequests = reservationDetail.SpecialRequests,
+                            LastModified = reservationDetail.LastModified,
+                            BillingInformation = reservationDetail.BillingInformation
+                        }
+                        }
+                    })
+                .ToList();
+
+            return reservationDetailsWithReservations;
         }
     }
 }
