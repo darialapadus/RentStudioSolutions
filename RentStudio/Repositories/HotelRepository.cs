@@ -120,5 +120,6 @@ namespace RentStudio.Repositories
 
             return hotelsWithRooms;
         }
+
     }
 }

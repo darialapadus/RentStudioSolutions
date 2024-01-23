@@ -69,5 +69,6 @@ namespace RentStudio.Services
         {
             return _customerRepository.GetCustomersWithReservations();
         }
+
     }
 }

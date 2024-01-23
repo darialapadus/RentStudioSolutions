@@ -11,6 +11,5 @@ namespace RentStudio.Services
         IEnumerable<GroupedHotelsByRatingDTO> GetHotelsGroupedByRating();
         IEnumerable<HotelDTO> GetHotelsWithAddress(string address);
         IEnumerable<HotelWithRoomsDTO> GetHotelsWithRooms();
-
     }
 }

@@ -28,5 +28,4 @@ namespace RentStudio.DataAccesLayer
 
         public virtual ICollection<Reservation> Reservations { get; set; } //add after
     }
-
 }

@@ -20,5 +20,4 @@ namespace RentStudio.DataAccesLayer
         public virtual ICollection<Room> Rooms { get; set; }
         public virtual ICollection<Employee> Employees { get; set; }
     }
-
 }

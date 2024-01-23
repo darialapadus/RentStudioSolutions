@@ -18,6 +18,5 @@ namespace RentStudio.DataAccesLayer
         public virtual Hotel Hotel { get; set; }
 
         public virtual ICollection<BookedRoom> BookedRooms { get; set; } //add after
-
     }
 }

@@ -14,5 +14,4 @@ namespace RentStudio.DataAccesLayer
         public DateTime? LastModified { get; set; }
         public string? BillingInformation { get; set; }
     }
-
 }

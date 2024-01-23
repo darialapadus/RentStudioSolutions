@@ -124,5 +124,6 @@ namespace RentStudio.Repositories
 
             return reservationDetailsWithReservations;
         }
+
     }
 }

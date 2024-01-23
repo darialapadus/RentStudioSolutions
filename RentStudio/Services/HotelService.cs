@@ -53,5 +53,6 @@ namespace RentStudio.Services
         {
             return _hotelRepository.GetHotelsWithRooms();
         }
+
     }
 }

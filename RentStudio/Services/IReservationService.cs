@@ -11,6 +11,5 @@ namespace RentStudio.Services
         IEnumerable<GroupedReservationsByStatusDTO> GetGroupedReservationsByStatus();
         IEnumerable<ReservationDTO> GetConfirmedReservations();
         IEnumerable<ReservationDTO> GetReservationsWithDetails();
-
     }
 }

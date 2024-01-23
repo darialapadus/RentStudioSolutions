@@ -67,6 +67,22 @@ namespace RentStudio.Controllers
             var employeesWithHotels = _employeeService.GetEmployeesWithHotels();
             return Ok(employeesWithHotels);
         }
-    }
 
+        //GET, dar iau decat o valoare dupa un id
+        [HttpGet("{employeeId}/position")]
+        public async Task<ActionResult<string>> GetEmployeePosition(int employeeId)
+        {
+            var position = await _employeeService.GetEmployeePositionByIdAsync(employeeId);
+            return Ok(position);
+        }
+
+        //GET, dar iau val dupa o lista de id
+        [HttpGet("positions")]
+        public async Task<ActionResult<List<string>>> GetEmployeePositions([FromQuery] List<int> employeeIds)
+        {
+            var positions = await _employeeService.GetEmployeePositionsByIdsAsync(employeeIds);
+            return Ok(positions);
+        }
+
+    }
 }

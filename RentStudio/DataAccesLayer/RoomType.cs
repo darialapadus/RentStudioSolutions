@@ -19,5 +19,4 @@ namespace RentStudio.DataAccesLayer
 
         public virtual ICollection<Room> Rooms { get; set; } //add after
     }
-
 }

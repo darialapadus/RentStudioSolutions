@@ -51,5 +51,6 @@ namespace RentStudio.Services
         {
             return _reservationDetailRepository.GetReservationDetailsWithReservations();
         }
+
     }
 }

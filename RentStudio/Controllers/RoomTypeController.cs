@@ -145,6 +145,5 @@ namespace RentStudio.Controllers
             return Ok(roomTypesWithRoomsDetails);
         }
 
-
     }
 }

@@ -44,12 +44,5 @@ namespace RentStudio.DataAccesLayer
                 .HasForeignKey(r => r.CustomerId);
         }
 
-
-        //In DbContext vom avea si metoda ce configureaza Contextul, OnConfiguring, in care vom specifica ConnectionString-ul spre baza de date pe care o vom folosi
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(); //ConnectionString
-        }*/
-
     }
 }

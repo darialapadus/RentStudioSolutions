@@ -113,7 +113,6 @@ namespace RentStudio.Controllers
             return Ok(roomsWithHotels);
         }
 
-
         //INCLUDE pentru a incarca toate detaliile despre camere impreuna cu informatiile despre rezervarile existente.
         [HttpGet("rooms-with-reservations")]
         public IActionResult GetRoomsWithReservations()

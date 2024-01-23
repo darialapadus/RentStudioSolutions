@@ -122,5 +122,6 @@ namespace RentStudio.Repositories
                     })
                 .ToList();
         }
+
     }
 }

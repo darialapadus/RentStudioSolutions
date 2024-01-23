@@ -68,5 +68,6 @@ namespace RentStudio.Controllers
 
             return Ok(reservationDetailsGroupedByRequests);
         }
+
     }
 }

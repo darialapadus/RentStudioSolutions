@@ -11,6 +11,5 @@ namespace RentStudio.Services
         IEnumerable<ReservationDetailGroupedByRequestsDTO> GetReservationDetailsGroupedByRequests();
         IEnumerable<ReservationDetailDTO> GetModifiedReservationDetails();
         IEnumerable<ReservationDetailGroupedByRequestsDTO> GetReservationDetailsWithReservations();
-
     }
 }

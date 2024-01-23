@@ -136,5 +136,32 @@ namespace RentStudio.Repositories
                     })
                 .ToList();
         }
+
+        public async Task<string> GetEmployeePositionByIdAsync(int employeeId)
+        {
+            var position = await _context.Employees
+                .Where(e => e.EmployeeId == employeeId)
+                .Select(e => e.Position)
+                .FirstOrDefaultAsync();
+            if (position == null)
+            {
+                throw new KeyNotFoundException($"Employee with ID {employeeId} not found");
+            }
+            return position;
+        }
+
+        public async Task<List<string>> GetEmployeePositionsByIdsAsync(List<int> employeeIds)
+        {
+            var positions = await _context.Employees
+                .Where(e => employeeIds.Contains(e.EmployeeId))
+                .Select(e => e.Position)
+                .ToListAsync();
+            if (positions == null || positions.Count == 0)
+            {
+                throw new KeyNotFoundException("No positions found for the provided employee IDs");
+            }
+            return positions;
+        }
+
     }
 }

@@ -15,7 +15,5 @@ namespace RentStudio.DataAccesLayer
         public int RoomId { get; set; }
         [ForeignKey("RoomId")]
         public virtual Room Room { get; set; }
-
     }
-
 }

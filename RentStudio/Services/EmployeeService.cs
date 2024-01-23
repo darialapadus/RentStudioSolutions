@@ -64,5 +64,16 @@ namespace RentStudio.Services
         {
             return _employeeRepository.GetEmployeesWithHotels();
         }
+
+        public async Task<string> GetEmployeePositionByIdAsync(int employeeId)
+        {
+            return await _employeeRepository.GetEmployeePositionByIdAsync(employeeId);
+        }
+
+        public async Task<List<string>> GetEmployeePositionsByIdsAsync(List<int> employeeIds)
+        {
+            return await _employeeRepository.GetEmployeePositionsByIdsAsync(employeeIds);
+        }
+
     }
 }
