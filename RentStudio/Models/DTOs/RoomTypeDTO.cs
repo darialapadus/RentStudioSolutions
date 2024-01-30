@@ -16,4 +16,13 @@ namespace RentStudio.Models.DTOs
         [Required]
         public decimal Price { get; set; }
     }
+
+    public class RoomTypeWithRoomsDTO
+    {
+        public int RoomTypeId { get; set; }
+        public string Name { get; set; }
+        public string Facilities { get; set; }
+        public decimal Price { get; set; }
+        public List<RoomDTO> Rooms { get; set; }
+    }
 }

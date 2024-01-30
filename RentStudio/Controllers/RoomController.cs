@@ -2,76 +2,52 @@
 using Microsoft.EntityFrameworkCore;
 using RentStudio.DataAccesLayer;
 using RentStudio.Models.DTOs;
+using RentStudio.Services.RoomService;
 
 namespace RentStudio.Controllers
 {
     public class RoomController : BaseController
     {
-        private readonly RentDbContext _context;
+        private readonly IRoomService _roomService;
 
-        public RoomController(RentDbContext context)
+        public RoomController(IRoomService roomService)
         {
-            _context = context;
+            _roomService = roomService;
         }
 
-        [HttpGet] //folosit pt requesturi de tip READ-citim/luam date din baza
+        [HttpGet]
         public IActionResult GetRooms()
         {
-            var rooms = _context.Rooms.ToList();
+            var rooms = _roomService.GetRooms();
             return Ok(rooms);
         }
 
-        [HttpPost] //folosit pt requesturi de tip WRITE-scriem date in baza(inserez o linie noua in tabela rooms);HttpReq e format din Header si Body
-        public IActionResult AddRooms([FromBody] RoomDTO room)
+        [HttpPost]
+        public IActionResult AddRoom([FromBody] RoomDTO roomDto)
         {
-            var entity = new Room();
-            entity.Number = room.Number;
-            entity.RoomTypeId = room.RoomTypeId;
-            entity.HotelId = room.HotelId;
-            _context.Rooms.Add(entity);
-            _context.SaveChanges();
-            return Ok(room);
+            _roomService.AddRoom(roomDto);
+            return Ok();
         }
 
         [HttpPut("{id}")]
         public IActionResult UpdateRoom(int id, [FromBody] RoomShortDTO updatedRoom)
         {
-            var existingRoom = _context.Rooms.Find(id);
-            if (existingRoom == null)
-                return NotFound();
-
-            existingRoom.Number = updatedRoom.Number;
-
-            _context.SaveChanges();
-            return Ok(existingRoom);
+            _roomService.UpdateRoom(id, updatedRoom);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteRoom(int id)
         {
-            var room = _context.Rooms.Find(id);
-            if (room == null)
-                return NotFound();
-
-            _context.Rooms.Remove(room);
-            _context.SaveChanges();
-            return Ok(room);
+            _roomService.DeleteRoom(id);
+            return Ok();
         }
 
         // GROUPBY pentru a grupa camerele in functie de numar si pentru a sorta rezultatele crescator.
         [HttpGet("rooms/grouped-by-number")]
         public IActionResult GetRoomsGroupedByNumber()
         {
-            var roomsGroupedByNumber = _context.Rooms
-                .GroupBy(r => r.Number)
-                .OrderBy(group => group.Key) // Sortare crescatoare dupa cheie (numar)
-                .Select(group => new
-                {
-                    Number = group.Key,
-                    Rooms = group.ToList()
-                })
-                .ToList();
-
+            var roomsGroupedByNumber = _roomService.GetRoomsGroupedByNumber();
             return Ok(roomsGroupedByNumber);
         }
 
@@ -79,10 +55,7 @@ namespace RentStudio.Controllers
         [HttpGet("rooms-of-type/{roomTypeId}")]
         public IActionResult GetRoomsOfType(int roomTypeId)
         {
-            var roomsOfType = _context.Rooms
-                .Where(r => r.RoomTypeId == roomTypeId)
-                .ToList();
-
+            var roomsOfType = _roomService.GetRoomsOfType(roomTypeId);
             return Ok(roomsOfType);
         }
 
@@ -90,26 +63,7 @@ namespace RentStudio.Controllers
         [HttpGet("rooms-with-hotels")]
         public IActionResult GetRoomsWithHotels()
         {
-            var roomsWithHotels = _context.Rooms
-                .Select(room => new
-                {
-                    Room = new RoomDTO
-                    {
-                        RoomId = room.RoomId,
-                        Number = room.Number,
-                        RoomTypeId = room.RoomTypeId,
-                        HotelId = room.HotelId
-                    },
-                    Hotel = new HotelDTO
-                    {
-                        HotelId = room.Hotel.HotelId,
-                        Name = room.Hotel.Name,
-                        Rating = room.Hotel.Rating,
-                        Address = room.Hotel.Address
-                    }
-                })
-                .ToList();
-
+            var roomsWithHotels = _roomService.GetRoomsWithHotels();
             return Ok(roomsWithHotels);
         }
 
@@ -117,10 +71,7 @@ namespace RentStudio.Controllers
         [HttpGet("rooms-with-reservations")]
         public IActionResult GetRoomsWithReservations()
         {
-            var roomsWithReservations = _context.Rooms
-                .Include(r => r.BookedRooms)
-                .ToList();
-
+            var roomsWithReservations = _roomService.GetRoomsWithReservations();
             return Ok(roomsWithReservations);
         }
 

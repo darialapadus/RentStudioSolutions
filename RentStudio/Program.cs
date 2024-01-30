@@ -8,12 +8,16 @@ using RentStudio.Repositories.EmployeeRepository;
 using RentStudio.Repositories.HotelRepository;
 using RentStudio.Repositories.ReservationDetailRepository;
 using RentStudio.Repositories.ReservationRepository;
+using RentStudio.Repositories.RoomRepository;
+using RentStudio.Repositories.RoomTypeRepository;
 using RentStudio.Repositories.UserRepository;
 using RentStudio.Services.CustomerService;
 using RentStudio.Services.EmployeeService;
 using RentStudio.Services.HotelService;
 using RentStudio.Services.ReservationDetailService;
 using RentStudio.Services.ReservationService;
+using RentStudio.Services.RoomService;
+using RentStudio.Services.RoomTypeService;
 using RentStudio.Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +44,13 @@ builder.Services.AddScoped<IReservationService, ReservationService>();
 
 builder.Services.AddScoped<IReservationDetailRepository, ReservationDetailRepository>();
 builder.Services.AddScoped<IReservationDetailService, ReservationDetailService>();
+
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+
+builder.Services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
+builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
+
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

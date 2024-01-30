@@ -15,5 +15,14 @@ namespace RentStudio.Models.DTOs
 
         [ForeignKey("HotelId")]
         public int HotelId { get; set; }
+
+        public HotelDTO Hotel { get; set; } 
+
+    }
+
+    public class RoomGroupedDTO
+    {
+        public string Number { get; set; }
+        public List<RoomDTO> Rooms { get; set; }
     }
 }

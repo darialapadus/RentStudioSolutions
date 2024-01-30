@@ -62,7 +62,7 @@ namespace RentStudio.Controllers
         [HttpGet("reservationdetails/grouped-by-requests")]
         public IActionResult GetReservationDetailsWithReservations()
         {
-            var reservationDetailsGroupedByRequests = _reservationDetailService.GetReservationDetailsGroupedByRequests(); // Aici se utilizează metoda din serviciu care returnează ReservationDetailGroupedByRequestsDTO
+            var reservationDetailsGroupedByRequests = _reservationDetailService.GetReservationDetailsGroupedByRequests(); 
 
             return Ok(reservationDetailsGroupedByRequests);
         }
