@@ -12,6 +12,6 @@ namespace RentStudio.Repositories.UserRepository
 
         Task<List<User>> FindAllActive();
 
-        Task<User> Create(User user);
+        User Create(User user);
     }
 }

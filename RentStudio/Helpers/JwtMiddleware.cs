@@ -23,6 +23,15 @@ namespace RentStudio.Helpers
             }
 
             await _next(context);
+            /*var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            if (token != null)
+            {
+                var userId = jwtUtil.GetUserId(token);
+                if (userId != null)
+                {
+                    context.Items["User"] = userService.GetById(userId.Value);
+                }
+            }*/
         }
     }
 }

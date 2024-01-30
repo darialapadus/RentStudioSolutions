@@ -36,11 +36,18 @@ namespace RentStudio.Repositories.UserRepository
              _context.SaveChanges();
          }*/
 
-        public async Task<User> Create(User user)
+        public User Create(User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
+            try
+            {
+                _context.Users.Add(user);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
             return user;
         }
 

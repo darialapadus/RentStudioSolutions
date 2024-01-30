@@ -19,6 +19,10 @@ using RentStudio.Services.ReservationService;
 using RentStudio.Services.RoomService;
 using RentStudio.Services.RoomTypeService;
 using RentStudio.Services.UserService;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,25 +63,92 @@ builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Events = new JwtBearerEvents
+        {
+            /*OnTokenValidated = context =>
+            {
+                var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                var userId = Guid.Parse(context.Principal.Identity.Name!);
+                var user = userService.GetById(userId);
+                if (user == null)
+                {
+                    // return unauthorized if user no longer exists
+                    context.Fail("Unauthorized2");
+                }
+                return Task.CompletedTask;
+            }*/
+        };
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("Laboratorul9_2023_DAW_Softbinator")),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+    // Add more policies as needed
+});
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+
+    // Add support for bearer token authentication
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter your Bearer token",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT" // or other format if applicable
+    };
+
+    c.AddSecurityDefinition("Bearer", securityScheme);
+
+    var securityRequirement = new OpenApiSecurityRequirement
+        {
+            { securityScheme, new[] { "Bearer" } }
+        };
+
+    c.AddSecurityRequirement(securityRequirement);
+});
+
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+    // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.)
     app.UseSwaggerUI();
 }
+app.UseMiddleware<JwtMiddleware>();
 
 app.UseHttpsRedirection();
-app.UseMiddleware<JwtMiddleware>();
+
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
-app.UseAuthorization();
 
 app.MapControllers();
 

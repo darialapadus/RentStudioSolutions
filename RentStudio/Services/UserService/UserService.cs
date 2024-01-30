@@ -50,7 +50,7 @@ namespace RentStudio.Services.UserService
             };
 
             var isCreated = _userRepository.Create(userToCreate);
-            if (isCreated.IsCompletedSuccessfully)
+            if (isCreated != null)
             {
                 return true;
             }
