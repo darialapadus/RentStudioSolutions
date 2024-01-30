@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentStudio.DataAccesLayer;
-using RentStudio.Models;
+using RentStudio.Models.DTOs;
 
 namespace RentStudio.Controllers
 {

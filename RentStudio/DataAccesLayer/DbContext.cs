@@ -26,6 +26,8 @@ namespace RentStudio.DataAccesLayer
 
         public DbSet<ReservationDetail> ReservationDetails {  get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -42,6 +44,9 @@ namespace RentStudio.DataAccesLayer
                 .HasMany(c => c.Reservations)
                 .WithOne(r => r.Customer)
                 .HasForeignKey(r => r.CustomerId);
+
+            modelBuilder.Entity<User>().ToTable("Users");
+
         }
 
     }
