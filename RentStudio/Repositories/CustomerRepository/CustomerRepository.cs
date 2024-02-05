@@ -23,17 +23,8 @@ namespace RentStudio.Repositories.CustomerRepository
             return _context.Customers.Include(c => c.Reservations).ToList();
         }
         //fara Dto in repo trb  mutat in service
-        public void AddCustomer(CustomerDTO customerDto)
+        public void AddCustomer(Customer entity)
         {
-            var entity = new Customer
-            {
-                FirstName = customerDto.FirstName,
-                LastName = customerDto.LastName,
-                Email = customerDto.Email,
-                Phone = customerDto.Phone,
-                City = customerDto.City
-            };
-
             _context.Customers.Add(entity);
             _context.SaveChanges();
         }

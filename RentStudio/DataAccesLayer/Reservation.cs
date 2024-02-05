@@ -27,6 +27,6 @@ namespace RentStudio.DataAccesLayer
 
         public virtual ICollection<BookedRoom> BookedRooms { get; set; }
 
-        public virtual ReservationDetail ReservationDetail { get; set; } //add after
+        public virtual ReservationDetail ReservationDetail { get; set; } 
     }
 }

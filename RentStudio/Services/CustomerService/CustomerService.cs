@@ -1,4 +1,5 @@
-﻿using RentStudio.Models.DTOs;
+﻿using RentStudio.DataAccesLayer;
+using RentStudio.Models.DTOs;
 using RentStudio.Repositories.CustomerRepository;
 
 namespace RentStudio.Services.CustomerService
@@ -33,7 +34,15 @@ namespace RentStudio.Services.CustomerService
 
         public void AddCustomer(CustomerDTO customerDto)
         {
-            _customerRepository.AddCustomer(customerDto);
+            var entity = new Customer
+            {
+                FirstName = customerDto.FirstName,
+                LastName = customerDto.LastName,
+                Email = customerDto.Email,
+                Phone = customerDto.Phone,
+                City = customerDto.City
+            };
+            _customerRepository.AddCustomer(entity);
         }
 
         public void UpdateCustomer(int id, CustomerShortDTO updatedCustomer)

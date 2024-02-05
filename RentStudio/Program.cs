@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Net.Http.Headers;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,60 +70,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.Events = new JwtBearerEvents
         {
-            /*OnTokenValidated = context =>
-            {
-                var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                var userId = Guid.Parse(context.Principal.Identity.Name!);
-                var user = userService.GetById(userId);
-                if (user == null)
-                {
-                    // return unauthorized if user no longer exists
-                    context.Fail("Unauthorized2");
-                }
-                return Task.CompletedTask;
-            }*/
+
         };
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
+            RoleClaimType = ClaimTypes.Role,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("Laboratorul9_2023_DAW_Softbinator")),
             ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateAudience = false,
         };
     });
 
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User"));
+
     // Add more policies as needed
 });
 
-/*builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
-
-    // Add support for bearer token authentication
-    var securityScheme = new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Description = "Enter your Bearer token",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT" // or other format if applicable
-    };
-
-    c.AddSecurityDefinition("Bearer", securityScheme);
-
-    var securityRequirement = new OpenApiSecurityRequirement
-        {
-            { securityScheme, new[] { "Bearer" } }
-        };
-
-    c.AddSecurityRequirement(securityRequirement);
-});*/
 
 builder.Services.AddSwaggerGen(
     c =>

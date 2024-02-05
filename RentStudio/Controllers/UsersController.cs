@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentStudio.Models.DTOs;
+using RentStudio.Models.Enums;
 using RentStudio.Services.UserService;
 
 namespace RentStudio.Controllers
@@ -14,13 +15,6 @@ namespace RentStudio.Controllers
         public UsersController(IUserService userService)
         {
             _userService = userService;
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> Test(UserLoginDto userLoginDto)
-        {
-            return Ok("Users");
         }
 
         [AllowAnonymous]
