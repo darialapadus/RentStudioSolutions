@@ -28,6 +28,7 @@ namespace RentStudio.DataAccesLayer
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<EmployeeRole> EmployeeRoles { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -12,8 +12,5 @@ namespace RentStudio.DataAccesLayer
         public string Name { get; set; } = "";
 
         public decimal BaseSalary { get; set; }
-        
-        public virtual ICollection<Employee> Employees { get; set; }
-
     }
 }
