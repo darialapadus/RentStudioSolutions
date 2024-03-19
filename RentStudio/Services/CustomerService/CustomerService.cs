@@ -18,9 +18,10 @@ namespace RentStudio.Services.CustomerService
             return _customerRepository.Save();
         }
 
-        public IEnumerable<CustomerDTO> GetCustomers()
+        public IEnumerable<CustomerDTO> GetCustomers(FilterCustomerDTO filterCustomerDTO)
         {
-            var customers = _customerRepository.GetCustomers();
+            var anyCustomerFilter = AnyCustomerFilter(filterCustomerDTO);
+            var customers = anyCustomerFilter ? _customerRepository.GetCustomers(filterCustomerDTO) : _customerRepository.GetCustomers();
             return customers.Select(c => new CustomerDTO
             {
                 CustomerId = c.CustomerId,
@@ -79,5 +80,21 @@ namespace RentStudio.Services.CustomerService
             return _customerRepository.GetCustomersWithReservations();
         }
 
+        private bool AnyCustomerFilter(FilterCustomerDTO filterCustomerDTO)
+        {
+            if (filterCustomerDTO == null)
+            {
+                return false;
+            }
+            if (!string.IsNullOrEmpty(filterCustomerDTO.LastName) ||
+                !string.IsNullOrEmpty(filterCustomerDTO.City) ||
+                !string.IsNullOrEmpty(filterCustomerDTO.Email) ||
+                !string.IsNullOrEmpty(filterCustomerDTO.Phone))
+
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

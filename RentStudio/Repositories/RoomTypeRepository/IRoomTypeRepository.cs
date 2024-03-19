@@ -6,6 +6,7 @@ namespace RentStudio.Repositories.RoomTypeRepository
     public interface IRoomTypeRepository
     {
         IEnumerable<RoomType> GetRoomTypes();
+        IEnumerable<RoomType> GetRoomTypes(FilterRoomTypeDTO filterRoomTypeDTO);
         void AddRoomTypes(RoomTypeDTO roomType);
         void UpdateRoomType(int id, RoomTypeShortDTO updatedRoomType);
         void DeleteRoomType(int id);

@@ -4,7 +4,7 @@ namespace RentStudio.Services.CustomerService
 {
     public interface ICustomerService
     {
-        IEnumerable<CustomerDTO> GetCustomers();
+        IEnumerable<CustomerDTO> GetCustomers(FilterCustomerDTO filterCustomerDTO);
         void AddCustomer(CustomerDTO customerDto);
         void UpdateCustomer(int id, CustomerShortDTO updatedCustomer);
         void DeleteCustomer(int id);

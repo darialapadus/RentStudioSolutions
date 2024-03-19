@@ -9,9 +9,10 @@ namespace RentStudio.Models.DTOs
         [Required]
         [MaxLength(50)]
         public string Name { get; set; } = "";
-
+        
+        [Required]
         [MaxLength(200)]
-        public required string Facilities { get; set; }
+        public string Facilities { get; set; } = "";
 
         [Required]
         public decimal Price { get; set; }

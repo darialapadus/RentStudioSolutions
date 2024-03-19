@@ -16,10 +16,17 @@ namespace RentStudio.Controllers
             _roomTypeService = roomTypeService;
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public IActionResult GetRoomTypes()
         {
             var roomTypes = _roomTypeService.GetRoomTypes();
+            return Ok(roomTypes);
+        }*/
+
+        [HttpGet]
+        public IActionResult GetRoomTypes([FromQuery] FilterRoomTypeDTO filterRoomTypeDTO)
+        {
+            var roomTypes = _roomTypeService.GetRoomTypes(filterRoomTypeDTO);
             return Ok(roomTypes);
         }
 

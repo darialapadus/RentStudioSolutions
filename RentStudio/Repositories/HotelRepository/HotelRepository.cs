@@ -22,6 +22,22 @@ namespace RentStudio.Repositories.HotelRepository
             return _context.Hotels.ToList();
         }
 
+        public IEnumerable<Hotel> GetHotels(FilterHotelDTO filterHotelDTO)
+        {
+            var query = _context.Hotels.AsQueryable();
+
+            if (filterHotelDTO.Rating != 0)
+            {
+                query = query.Where(x => x.Rating == filterHotelDTO.Rating);
+            }
+            if (!string.IsNullOrEmpty(filterHotelDTO.Address))
+            {
+                query = query.Where(x => x.Address == filterHotelDTO.Address);
+            }
+
+            return query.ToList();
+        }
+
         public void AddHotel(HotelDTO hotelDto)
         {
             var entity = new Hotel

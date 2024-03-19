@@ -5,7 +5,7 @@ namespace RentStudio.Services.RoomTypeService
 {
     public interface IRoomTypeService
     {
-        IEnumerable<RoomTypeDTO> GetRoomTypes();
+        IEnumerable<RoomTypeDTO> GetRoomTypes(FilterRoomTypeDTO filterRoomTypeDTO);
         void AddRoomTypes(RoomTypeDTO roomType);
         void UpdateRoomType(int id, RoomTypeShortDTO updatedRoomType);
         void DeleteRoomType(int id);

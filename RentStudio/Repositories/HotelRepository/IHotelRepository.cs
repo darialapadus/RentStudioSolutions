@@ -6,6 +6,7 @@ namespace RentStudio.Repositories.HotelRepository
     public interface IHotelRepository
     {
         IEnumerable<Hotel> GetHotels();
+        IEnumerable<Hotel> GetHotels(FilterHotelDTO filterHotelDTO);
         void AddHotel(HotelDTO hotelDto);
         void UpdateHotel(int id, HotelShortDTO updatedHotel);
         void DeleteHotel(int id);

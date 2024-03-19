@@ -13,14 +13,22 @@ namespace RentStudio.Controllers
             _customerService = customerService;
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public IActionResult GetCustomers()
         {
             var customers = _customerService.GetCustomers();
             return Ok(customers);
+        }*/
+
+        [HttpGet]
+        public IActionResult GetCustomers([FromQuery] FilterCustomerDTO filterCustomerDTO)
+        {
+            var customers = _customerService.GetCustomers(filterCustomerDTO);
+            return Ok(customers);
         }
 
-        [HttpPost]
+
+        [HttpPost]  
         public IActionResult AddCustomer([FromBody] CustomerDTO customerDto)
         {
             _customerService.AddCustomer(customerDto);

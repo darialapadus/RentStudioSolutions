@@ -17,9 +17,10 @@ namespace RentStudio.Services.EmployeeService
             throw new NotImplementedException();
         }
 
-        public IEnumerable<EmployeeDTO> GetEmployees()
+        public IEnumerable<EmployeeDTO> GetEmployees(FilterEmployeeDTO filterEmployeeDTO)
         {
-            var employees = _employeeRepository.GetEmployees();
+            var anyFilters = AnyFilter(filterEmployeeDTO);
+            var employees = anyFilters ? _employeeRepository.GetEmployees(filterEmployeeDTO) : _employeeRepository.GetEmployees();
             return employees.Select(e => new EmployeeDTO
             {
                 EmployeeId = e.EmployeeId,
@@ -73,5 +74,19 @@ namespace RentStudio.Services.EmployeeService
             return await _employeeRepository.GetEmployeePositionsByIdsAsync(employeeIds);
         }
 
+        private bool AnyFilter(FilterEmployeeDTO filterEmployeeDTO)
+        {
+            if (filterEmployeeDTO == null)
+                return false;
+
+            if (filterEmployeeDTO.Salary != 0 ||
+                !string.IsNullOrEmpty(filterEmployeeDTO.FirstName) ||
+                !string.IsNullOrEmpty(filterEmployeeDTO.Gender) ||
+                !string.IsNullOrEmpty(filterEmployeeDTO.Position))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

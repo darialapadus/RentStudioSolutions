@@ -22,7 +22,29 @@ namespace RentStudio.Repositories.CustomerRepository
         {
             return _context.Customers.Include(c => c.Reservations).ToList();
         }
-        //fara Dto in repo trb  mutat in service
+        public IEnumerable<Customer> GetCustomers(FilterCustomerDTO filterCustomerDTO)
+        {
+            var query = _context.Customers.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filterCustomerDTO.LastName))
+            {
+                query = query.Where(x => x.LastName == filterCustomerDTO.LastName);
+            }
+            if (!string.IsNullOrEmpty(filterCustomerDTO.Email))
+            {
+                query = query.Where(x => x.Email == filterCustomerDTO.Email);
+            }
+            if (!string.IsNullOrEmpty(filterCustomerDTO.Phone))
+            {
+                query = query.Where(x => x.Phone == filterCustomerDTO.Phone);
+            }
+            if (!string.IsNullOrEmpty(filterCustomerDTO.City))
+            {
+                query = query.Where(x => x.City == filterCustomerDTO.City);
+            }
+
+            return query.ToList(); 
+        }
         public void AddCustomer(Customer entity)
         {
             _context.Customers.Add(entity);
@@ -115,4 +137,5 @@ namespace RentStudio.Repositories.CustomerRepository
         }
 
     }
+
 }

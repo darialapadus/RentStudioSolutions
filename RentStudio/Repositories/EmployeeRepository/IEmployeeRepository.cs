@@ -6,6 +6,7 @@ namespace RentStudio.Repositories.EmployeeRepository
     public interface IEmployeeRepository
     {
         IEnumerable<Employee> GetEmployees();
+        IEnumerable<Employee> GetEmployees(FilterEmployeeDTO filters);
         void AddEmployee(EmployeeDTO employeeDto);
         void UpdateEmployee(int id, EmployeeShortDTO updatedEmployee);
         void DeleteEmployee(int id);
@@ -22,4 +23,3 @@ namespace RentStudio.Repositories.EmployeeRepository
         public HotelDTO Hotel { get; set; }
     }
 }
-

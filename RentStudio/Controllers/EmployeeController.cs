@@ -13,10 +13,17 @@ namespace RentStudio.Controllers
             _employeeService = employeeService;
         }
 
-        [HttpGet]
+        /*[HttpGet] 
         public IActionResult GetEmployees()
         {
-            var employees = _employeeService.GetEmployees();
+            var employees = _employeeService.GetEmployees(new FilterEmployeeDTO());
+            return Ok(employees);
+        }*/
+
+        [HttpGet]
+        public IActionResult GetEmployees([FromQuery] FilterEmployeeDTO filterEmployeeDTO)
+        {
+            var employees = _employeeService.GetEmployees(filterEmployeeDTO);
             return Ok(employees);
         }
 

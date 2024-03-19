@@ -22,6 +22,25 @@ namespace RentStudio.Repositories.RoomTypeRepository
             return _context.RoomTypes.ToList();
         }
 
+        public IEnumerable<RoomType> GetRoomTypes(FilterRoomTypeDTO filterRoomTypeDTO)
+        {
+            var query = _context.RoomTypes.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filterRoomTypeDTO.Name))
+            {
+                query = query.Where(x => x.Name == filterRoomTypeDTO.Name);
+            }
+            if (filterRoomTypeDTO.Price != 0)
+            {
+                query = query.Where(x => x.Price == filterRoomTypeDTO.Price);
+            }
+            if (!string.IsNullOrEmpty(filterRoomTypeDTO.Facilities))
+            {
+                query = query.Where(x => x.Name == filterRoomTypeDTO.Facilities);
+            }
+
+            return query.ToList();
+        }
         public void AddRoomTypes(RoomTypeDTO roomTypeDto)
         {
             var entity = new RoomType

@@ -13,10 +13,17 @@ namespace RentStudio.Controllers
             _hotelService = hotelService;
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public IActionResult GetHotels()
         {
             var hotels = _hotelService.GetHotels();
+            return Ok(hotels);
+        }*/
+
+        [HttpGet]
+        public IActionResult GetHotels([FromQuery] FilterHotelDTO filterHotelDTO)
+        {
+            var hotels = _hotelService.GetHotels(filterHotelDTO);
             return Ok(hotels);
         }
 
@@ -64,6 +71,6 @@ namespace RentStudio.Controllers
             var hotelsWithRooms = _hotelService.GetHotelsWithRooms();
             return Ok(hotelsWithRooms);
         }
-        
+
     }
 }

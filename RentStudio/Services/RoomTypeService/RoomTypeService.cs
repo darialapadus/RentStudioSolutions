@@ -17,9 +17,10 @@ namespace RentStudio.Services.RoomTypeService
             return _roomTypeRepository.Save();
         }
 
-        public IEnumerable<RoomTypeDTO> GetRoomTypes()
+        public IEnumerable<RoomTypeDTO> GetRoomTypes(FilterRoomTypeDTO filterRoomTypeDTO)
         {
-            var roomTypes = _roomTypeRepository.GetRoomTypes();
+            var anyRoomTypeFilter = AnyRoomTypeFilter(filterRoomTypeDTO);
+            var roomTypes = anyRoomTypeFilter ? _roomTypeRepository.GetRoomTypes(filterRoomTypeDTO) : _roomTypeRepository.GetRoomTypes();
             return roomTypes.Select(t => new RoomTypeDTO
             {
                 RoomTypeId = t.RoomTypeId,
@@ -75,5 +76,20 @@ namespace RentStudio.Services.RoomTypeService
         {
             return _roomTypeRepository.GetRoomTypesWithRooms();
         }
+
+        private bool AnyRoomTypeFilter(FilterRoomTypeDTO filterRoomTypeDTO)
+        {
+            if (filterRoomTypeDTO == null)
+            {
+                return false;
+            }
+            if (!string.IsNullOrEmpty(filterRoomTypeDTO.Name) ||
+                !string.IsNullOrEmpty(filterRoomTypeDTO.Facilities) ||
+                 filterRoomTypeDTO.Price != 0)
+            {
+                return true;
+            }
+            return false;
+        }   
     }
 }

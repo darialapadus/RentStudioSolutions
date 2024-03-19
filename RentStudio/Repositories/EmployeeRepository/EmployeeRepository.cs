@@ -17,6 +17,31 @@ namespace RentStudio.Repositories.EmployeeRepository
         {
             return _context.Employees.Include(e => e.Hotel).ToList();
         }
+        //de facut si cu stored procedures
+        public IEnumerable<Employee> GetEmployees(FilterEmployeeDTO filters)
+        {
+            var query = _context.Employees.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filters.FirstName))
+            {
+                query = query.Where(x => x.FirstName == filters.FirstName);
+            }
+            if (!string.IsNullOrEmpty(filters.Gender))
+            {
+                query = query.Where(x => x.Gender == filters.Gender);
+            }
+            if (!string.IsNullOrEmpty(filters.Position))
+            {
+                query = query.Where(x => x.Position == filters.Position);
+            }
+            if (filters.Salary > 0)
+            {
+                query = query.Where(x => x.Salary == filters.Salary);
+            }
+            var result = query.ToList();
+            return result;
+
+        }
 
         bool IEmployeeRepository.Save()
         {

@@ -5,7 +5,7 @@ namespace RentStudio.Services.EmployeeService
 {
     public interface IEmployeeService
     {
-        IEnumerable<EmployeeDTO> GetEmployees();
+        IEnumerable<EmployeeDTO> GetEmployees(FilterEmployeeDTO filterEmployeeDTO);
         void AddEmployee(EmployeeDTO employeeDto);
         void UpdateEmployee(int id, EmployeeShortDTO updatedEmployee);
         void DeleteEmployee(int id);

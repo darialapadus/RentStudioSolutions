@@ -5,4 +5,12 @@
         Admin,
         User
     }
+
+    public enum EmployeeRole
+    {
+        Manager,
+        Receptionist,
+        Cleaner,
+        Security
+    }
 }

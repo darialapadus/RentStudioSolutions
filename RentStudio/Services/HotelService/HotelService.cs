@@ -12,9 +12,10 @@ namespace RentStudio.Services.HotelService
             _hotelRepository = hotelRepository;
         }
 
-        public IEnumerable<HotelDTO> GetHotels()
+        public IEnumerable<HotelDTO> GetHotels(FilterHotelDTO filterHotelDTO)
         {
-            var hotels = _hotelRepository.GetHotels();
+            var anyHotelFilter = AnyHotelFilter(filterHotelDTO);
+            var hotels = anyHotelFilter ? _hotelRepository.GetHotels(filterHotelDTO) : _hotelRepository.GetHotels();
             return hotels.Select(h => new HotelDTO
             {
                 HotelId = h.HotelId,
@@ -54,5 +55,16 @@ namespace RentStudio.Services.HotelService
             return _hotelRepository.GetHotelsWithRooms();
         }
 
+        private bool AnyHotelFilter(FilterHotelDTO filterHotelDTO)
+        {
+            if(filterHotelDTO == null)
+                return false;
+
+            if(!string.IsNullOrEmpty(filterHotelDTO.Address) || 
+                filterHotelDTO.Rating !=0)
+                return true;
+            
+            return false;
+        }
     }
 }
