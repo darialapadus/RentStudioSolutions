@@ -12,6 +12,11 @@ namespace RentStudio.Repositories.EmployeeRepository
         {
             _context = context;
         }
+        public int GetHotelIdByEmployeeId(int employeeId)
+        {
+            var employee = _context.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
+            return employee != null ? employee.HotelId : -1; 
+        }
 
         public IEnumerable<Employee> GetEmployees()
         {
@@ -58,7 +63,8 @@ namespace RentStudio.Repositories.EmployeeRepository
                 Gender = employeeDto.Gender,
                 Salary = employeeDto.Salary,
                 Position = employeeDto.Position,
-                HotelId = employeeDto.HotelId
+                HotelId = employeeDto.HotelId,
+                StartDate = employeeDto.StartDate
             };
 
             _context.Employees.Add(entity);
@@ -162,12 +168,12 @@ namespace RentStudio.Repositories.EmployeeRepository
                 .ToList();
         }
 
-        public async Task<string> GetEmployeePositionByIdAsync(int employeeId)
+        public string GetEmployeePositionByIdAsync(int employeeId)
         {
-            var position = await _context.Employees
+            var position = _context.Employees
                 .Where(e => e.EmployeeId == employeeId)
                 .Select(e => e.Position)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
             if (position == null)
             {
                 throw new KeyNotFoundException($"Employee with ID {employeeId} not found");

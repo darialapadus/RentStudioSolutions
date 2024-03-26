@@ -11,7 +11,14 @@ namespace RentStudio.Services.HotelService
         {
             _hotelRepository = hotelRepository;
         }
-
+        public string GetHotelNameById(int hotelId)
+        {
+            return _hotelRepository.GetHotelNameById(hotelId);
+        }
+        public int GetNumberOfRooms(int hotelId)
+        {
+            return _hotelRepository.GetNumberOfRooms(hotelId);
+        }
         public IEnumerable<HotelDTO> GetHotels(FilterHotelDTO filterHotelDTO)
         {
             var anyHotelFilter = AnyHotelFilter(filterHotelDTO);

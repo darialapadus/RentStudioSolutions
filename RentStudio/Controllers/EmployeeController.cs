@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentStudio.Models.DTOs;
+using RentStudio.Models.DTOs.Responses;
 using RentStudio.Services.EmployeeService;
 
 namespace RentStudio.Controllers
@@ -11,6 +12,17 @@ namespace RentStudio.Controllers
         public EmployeeController(IEmployeeService employeeService)
         {
             _employeeService = employeeService;
+        }
+
+        [HttpGet("employees/salary")]
+        public IActionResult GetEmployeeSalary(int EmployeeId)
+        {
+            if (EmployeeId <= 0)
+                return BadRequest("EmployeeId must be greater than 0");
+
+            SalaryResponseDTO salary = _employeeService.GetEmployeeSalary(EmployeeId);
+
+            return Ok(salary);
         }
 
         /*[HttpGet] 
@@ -74,9 +86,9 @@ namespace RentStudio.Controllers
 
         //GET, dar iau decat o valoare dupa un id
         [HttpGet("{employeeId}/position")]
-        public async Task<ActionResult<string>> GetEmployeePosition(int employeeId)
+        public ActionResult<string> GetEmployeePosition(int employeeId)
         {
-            var position = await _employeeService.GetEmployeePositionByIdAsync(employeeId);
+            var position = _employeeService.GetEmployeePositionByIdAsync(employeeId);
             return Ok(position);
         }
 
@@ -87,6 +99,7 @@ namespace RentStudio.Controllers
             var positions = await _employeeService.GetEmployeePositionsByIdsAsync(employeeIds);
             return Ok(positions);
         }
+
 
     }
 }

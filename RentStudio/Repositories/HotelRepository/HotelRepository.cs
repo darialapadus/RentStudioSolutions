@@ -1,4 +1,5 @@
-﻿using RentStudio.DataAccesLayer;
+﻿using Microsoft.EntityFrameworkCore;
+using RentStudio.DataAccesLayer;
 using RentStudio.Models.DTOs;
 
 namespace RentStudio.Repositories.HotelRepository
@@ -11,7 +12,16 @@ namespace RentStudio.Repositories.HotelRepository
         {
             _context = context;
         }
-
+        public int GetNumberOfRooms(int hotelId)
+        {
+            int numberOfRooms = _context.Rooms.Count(room => room.HotelId == hotelId);
+            return numberOfRooms;
+        }
+        public string GetHotelNameById(int hotelId)
+        {
+            var hotel = _context.Hotels.FirstOrDefault(h => h.HotelId == hotelId);
+            return hotel != null ? hotel.Name : null; 
+        }
         bool IHotelRepository.Save()
         {
             throw new NotImplementedException();

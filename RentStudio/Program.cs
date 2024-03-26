@@ -25,6 +25,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Net.Http.Headers;
 using System.Security.Claims;
+using RentStudio.Services.SalaryService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +61,8 @@ builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<ISalaryService, SalaryService>();
 
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 

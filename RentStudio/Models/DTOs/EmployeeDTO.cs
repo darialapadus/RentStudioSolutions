@@ -27,6 +27,8 @@ namespace RentStudio.Models.DTOs
         public decimal Salary { get; set; }
 
         public int HotelId { get; set; }
+        public DateTime StartDate { get; set; }
+
     }
     public class GroupedEmployeesDTO
     {

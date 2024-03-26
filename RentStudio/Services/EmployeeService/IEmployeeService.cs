@@ -1,4 +1,5 @@
 ﻿using RentStudio.Models.DTOs;
+using RentStudio.Models.DTOs.Responses;
 using RentStudio.Repositories.EmployeeRepository;
 
 namespace RentStudio.Services.EmployeeService
@@ -6,6 +7,7 @@ namespace RentStudio.Services.EmployeeService
     public interface IEmployeeService
     {
         IEnumerable<EmployeeDTO> GetEmployees(FilterEmployeeDTO filterEmployeeDTO);
+        public SalaryResponseDTO GetEmployeeSalary(int EmployeeId);
         void AddEmployee(EmployeeDTO employeeDto);
         void UpdateEmployee(int id, EmployeeShortDTO updatedEmployee);
         void DeleteEmployee(int id);
@@ -13,7 +15,8 @@ namespace RentStudio.Services.EmployeeService
         IEnumerable<GroupedEmployeesDTO> GetEmployeesGroupedByPosition();
         IEnumerable<EmployeeDTO> GetEmployeesAtHotel(int hotelId);
         IEnumerable<EmployeeWithHotelDTO> GetEmployeesWithHotels();
-        Task<string> GetEmployeePositionByIdAsync(int employeeId);
+        string GetEmployeePositionByIdAsync(int employeeId);
         Task<List<string>> GetEmployeePositionsByIdsAsync(List<int> employeeIds);
+
     }
 }

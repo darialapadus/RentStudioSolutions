@@ -14,8 +14,9 @@ namespace RentStudio.Repositories.EmployeeRepository
         IEnumerable<GroupedEmployeesDTO> GetEmployeesGroupedByPosition();
         IEnumerable<EmployeeDTO> GetEmployeesAtHotel(int hotelId);
         IEnumerable<EmployeeWithHotelDTO> GetEmployeesWithHotels();
-        Task<string> GetEmployeePositionByIdAsync(int employeeId);
+        string GetEmployeePositionByIdAsync(int employeeId);
         Task<List<string>> GetEmployeePositionsByIdsAsync(List<int> employeeIds);
+        int GetHotelIdByEmployeeId(int employeeId);
     }
     public class EmployeeWithHotelDTO
     {

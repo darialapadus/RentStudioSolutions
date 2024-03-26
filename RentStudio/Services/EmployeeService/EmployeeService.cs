@@ -1,20 +1,49 @@
-﻿using RentStudio.Models.DTOs;
+﻿using RentStudio.DataAccesLayer;
+using RentStudio.Models.DTOs;
+using RentStudio.Models.DTOs.Responses;
 using RentStudio.Repositories.EmployeeRepository;
+using RentStudio.Services.HotelService;
+using RentStudio.Services.SalaryService;
 
 namespace RentStudio.Services.EmployeeService
 {
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly ISalaryService _salaryService;
+        private readonly IHotelService _hotelService;
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository, ISalaryService salaryService, IHotelService hotelService)
         {
             _employeeRepository = employeeRepository;
+            _salaryService = salaryService;
+            _hotelService = hotelService;
         }
 
         bool IEmployeeService.Save()
         {
             throw new NotImplementedException();
+        }
+        public SalaryResponseDTO GetEmployeeSalary(int employeeId)
+        {
+            var employeePosition = _employeeRepository.GetEmployeePositionByIdAsync(employeeId);
+            var allEmployees = _employeeRepository.GetEmployees();          //de inlocuit cu noua metoda+modificarile de rigoare
+            var startDate = allEmployees.FirstOrDefault(e => e.EmployeeId == employeeId).StartDate;
+            var employeeName = allEmployees.FirstOrDefault(e => e.EmployeeId == employeeId).FirstName; //in serviciul de EmployeeRepository, EmployeeService trebuie sa adaugam GetEmployeeById 
+            var salary = _salaryService.CalculateSalary(startDate, employeePosition);
+            var hotelId = _employeeRepository.GetHotelIdByEmployeeId(employeeId);
+            var hotelName = _hotelService.GetHotelNameById(hotelId);
+            var numberOfRooms = _hotelService.GetNumberOfRooms(hotelId);
+            var responseDto = new SalaryResponseDTO
+            {
+                Salary = salary,
+                HotelName = hotelName,
+                Position = employeePosition,
+                NumberOfRooms = numberOfRooms,
+                EmployeeName = employeeName
+            };
+
+            return responseDto;
         }
 
         public IEnumerable<EmployeeDTO> GetEmployees(FilterEmployeeDTO filterEmployeeDTO)
@@ -64,9 +93,9 @@ namespace RentStudio.Services.EmployeeService
             return _employeeRepository.GetEmployeesWithHotels();
         }
 
-        public async Task<string> GetEmployeePositionByIdAsync(int employeeId)
+        public string GetEmployeePositionByIdAsync(int employeeId)
         {
-            return await _employeeRepository.GetEmployeePositionByIdAsync(employeeId);
+            return _employeeRepository.GetEmployeePositionByIdAsync(employeeId);
         }
 
         public async Task<List<string>> GetEmployeePositionsByIdsAsync(List<int> employeeIds)
