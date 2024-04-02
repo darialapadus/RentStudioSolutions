@@ -17,6 +17,8 @@ namespace RentStudio.Repositories.EmployeeRepository
         string GetEmployeePositionByIdAsync(int employeeId);
         Task<List<string>> GetEmployeePositionsByIdsAsync(List<int> employeeIds);
         int GetHotelIdByEmployeeId(int employeeId);
+        Employee GetEmployeeById(int employeeId);
+
     }
     public class EmployeeWithHotelDTO
     {

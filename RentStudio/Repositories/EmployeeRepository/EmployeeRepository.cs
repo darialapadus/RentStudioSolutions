@@ -17,6 +17,10 @@ namespace RentStudio.Repositories.EmployeeRepository
             var employee = _context.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
             return employee != null ? employee.HotelId : -1; 
         }
+        public Employee GetEmployeeById(int employeeId)
+        {
+            return _context.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
+        }
 
         public IEnumerable<Employee> GetEmployees()
         {

@@ -1,4 +1,5 @@
-﻿using RentStudio.Models.DTOs;
+﻿using RentStudio.DataAccesLayer;
+using RentStudio.Models.DTOs;
 using RentStudio.Models.DTOs.Responses;
 using RentStudio.Repositories.EmployeeRepository;
 
@@ -17,6 +18,7 @@ namespace RentStudio.Services.EmployeeService
         IEnumerable<EmployeeWithHotelDTO> GetEmployeesWithHotels();
         string GetEmployeePositionByIdAsync(int employeeId);
         Task<List<string>> GetEmployeePositionsByIdsAsync(List<int> employeeIds);
+        Employee GetEmployeeById(int employeeId);
 
     }
 }

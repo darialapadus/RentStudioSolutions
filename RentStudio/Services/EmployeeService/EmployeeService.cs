@@ -27,9 +27,12 @@ namespace RentStudio.Services.EmployeeService
         public SalaryResponseDTO GetEmployeeSalary(int employeeId)
         {
             var employeePosition = _employeeRepository.GetEmployeePositionByIdAsync(employeeId);
-            var allEmployees = _employeeRepository.GetEmployees();          //de inlocuit cu noua metoda+modificarile de rigoare
-            var startDate = allEmployees.FirstOrDefault(e => e.EmployeeId == employeeId).StartDate;
-            var employeeName = allEmployees.FirstOrDefault(e => e.EmployeeId == employeeId).FirstName; //in serviciul de EmployeeRepository, EmployeeService trebuie sa adaugam GetEmployeeById 
+            /* var allEmployees = _employeeRepository.GetEmployees();          //de inlocuit cu noua metoda+modificarile de rigoare
+             var startDate = allEmployees.FirstOrDefault(e => e.EmployeeId == employeeId).StartDate;
+             var employeeName = allEmployees.FirstOrDefault(e => e.EmployeeId == employeeId).FirstName; //in serviciul de EmployeeRepository, EmployeeService trebuie sa adaugam GetEmployeeById */
+            var employee = _employeeRepository.GetEmployeeById(employeeId);
+            var startDate = employee.StartDate;
+            var employeeName = employee.FirstName;
             var salary = _salaryService.CalculateSalary(startDate, employeePosition);
             var hotelId = _employeeRepository.GetHotelIdByEmployeeId(employeeId);
             var hotelName = _hotelService.GetHotelNameById(hotelId);
@@ -44,6 +47,10 @@ namespace RentStudio.Services.EmployeeService
             };
 
             return responseDto;
+        }
+        public Employee GetEmployeeById(int employeeId)
+        {
+            return _employeeRepository.GetEmployeeById(employeeId);
         }
 
         public IEnumerable<EmployeeDTO> GetEmployees(FilterEmployeeDTO filterEmployeeDTO)
