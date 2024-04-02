@@ -27,6 +27,7 @@ using Microsoft.Net.Http.Headers;
 using System.Security.Claims;
 using RentStudio.Services.SalaryService;
 using RentStudio.Services.ReportService;
+using RentStudio.Services.WeatherService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +67,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISalaryService, SalaryService>();
 
 builder.Services.AddScoped<IReportService, ReportService>();
+
+builder.Services.AddScoped<HttpClient>();
+
+builder.Services.AddScoped<WeatherService>();
 
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 
