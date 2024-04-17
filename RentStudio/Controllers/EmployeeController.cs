@@ -2,16 +2,20 @@
 using RentStudio.Models.DTOs;
 using RentStudio.Models.DTOs.Responses;
 using RentStudio.Services.EmployeeService;
+using RentStudio.Services.AzureService;
 
 namespace RentStudio.Controllers
 {
     public class EmployeeController : BaseController
     {
         private readonly IEmployeeService _employeeService;
+        private readonly AzureService _azureService;
 
-        public EmployeeController(IEmployeeService employeeService)
+
+        public EmployeeController(IEmployeeService employeeService, AzureService azureService)
         {
             _employeeService = employeeService;
+            _azureService = azureService;
         }
 
         [HttpGet("employees/salary")]
@@ -100,6 +104,31 @@ namespace RentStudio.Controllers
             return Ok(positions);
         }
 
+        [HttpPost("UploadImage")]
+        public async Task<IActionResult> AddImage(IFormFile imageFile)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+                return BadRequest("Invalid image file.");
+
+            using (var stream = imageFile.OpenReadStream())
+            {
+                var imageUrl = await _azureService.UploadImageAsync(stream, imageFile.FileName);
+                return Ok($"Imaginea a fost adăugată cu succes. URL: {imageUrl}");
+            }
+        }
+
+        [HttpGet("GetImage/{imageName}")]
+        public async Task<IActionResult> GetImage(string imageName)
+        {
+            if (string.IsNullOrEmpty(imageName))
+                return BadRequest("Invalid image name.");
+
+            var imageStream = await _azureService.GetImageAsync(imageName);
+            if (imageStream == null)
+                return NotFound("Imaginea nu a fost găsită.");
+
+            return File(imageStream, "image/jpeg");
+        }
 
     }
 }

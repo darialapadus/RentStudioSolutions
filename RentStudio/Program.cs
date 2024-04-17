@@ -28,8 +28,12 @@ using System.Security.Claims;
 using RentStudio.Services.SalaryService;
 using RentStudio.Services.ReportService;
 using RentStudio.Services.WeatherService;
+using RentStudio.Services.AzureService;
+using RentStudio.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<AzureSettings>(builder.Configuration.GetSection("Azure"));
 
 builder.Services.AddDbContext<RentDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -71,6 +75,8 @@ builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<HttpClient>();
 
 builder.Services.AddScoped<WeatherService>();
+
+builder.Services.AddScoped<AzureService>();
 
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 
