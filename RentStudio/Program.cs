@@ -45,7 +45,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>(); 
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-
+var test = 35; //addsingltone
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IHotelService, HotelService>();
 

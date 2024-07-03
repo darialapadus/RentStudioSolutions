@@ -39,5 +39,28 @@ namespace RentStudio.Services.AzureService
 
             return memoryStream;
         }
+
+        public async Task<string> UploadPdfAsync(Stream pdfStream, string pdfName)
+        {
+            var container = _blobClient.GetContainerReference(_containerName);
+            await container.CreateIfNotExistsAsync();
+
+            var blob = container.GetBlockBlobReference(pdfName);
+            await blob.UploadFromStreamAsync(pdfStream);
+
+            return blob.Uri.ToString();
+        }
+
+        public async Task<Stream> GetPdfAsync(string pdfName)
+        {
+            var container = _blobClient.GetContainerReference(_containerName);
+            var blob = container.GetBlockBlobReference(pdfName);
+
+            var memoryStream = new MemoryStream();
+            await blob.DownloadToStreamAsync(memoryStream);
+            memoryStream.Position = 0;
+
+            return memoryStream;
+        }
     }
 }
