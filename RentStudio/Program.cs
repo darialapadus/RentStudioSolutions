@@ -30,6 +30,8 @@ using RentStudio.Services.ReportService;
 using RentStudio.Services.WeatherService;
 using RentStudio.Services.AzureService;
 using RentStudio.Configurations;
+using RentStudio.Services.PaymentService;
+using RentStudio.Repositories.PaymentRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,6 +79,10 @@ builder.Services.AddScoped<HttpClient>();
 builder.Services.AddScoped<WeatherService>();
 
 builder.Services.AddScoped<AzureService>();
+
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 

@@ -18,4 +18,19 @@
     {
         SalaryTax = 45
     }
+
+    public enum PaymentMethod
+    {
+        Cash = 0,
+        Card = 1,
+        BankTransfer = 2
+    }
+
+    public enum PaymentStatus
+    {
+        Succeeded = 0,
+        Failed = 1,
+        InsufficientFunds = 2,
+        Processed = 3
+    }
 }

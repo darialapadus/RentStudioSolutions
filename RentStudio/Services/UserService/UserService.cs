@@ -4,6 +4,7 @@ using RentStudio.Models.DTOs;
 using RentStudio.Models.Enums;
 using BCryptNet = BCrypt.Net.BCrypt;
 using RentStudio.Repositories.UserRepository;
+using RentStudio.Helpers;
 
 namespace RentStudio.Services.UserService
 {
@@ -55,6 +56,27 @@ namespace RentStudio.Services.UserService
                 return true;
             }
             return false;
+        }
+
+        public Guid PartialRegisterUser(PaymentDTO paymentDTO)
+        {
+            var user = _userRepository.FindByCNP(paymentDTO.CNP);
+            if (user == null)
+            {
+                user = new User
+                {
+                    FirstName = paymentDTO.FirstName,
+                    LastName = paymentDTO.LastName,
+                    CNP = paymentDTO.CNP,
+                    Address = paymentDTO.Address,
+                    Email = paymentDTO.Email,
+                    Password = PasswordGenerator.GenerateGuidPasswordHash(),
+                    Username = paymentDTO.FirstName + paymentDTO.LastName
+                };
+                _userRepository.Add(user);
+                _userRepository.Save();
+            }
+            return user.Id;
         }
     }
 }

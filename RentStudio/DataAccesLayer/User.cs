@@ -24,5 +24,8 @@ namespace RentStudio.DataAccesLayer
         public string Password { get; set; }
 
         public Role Role { get; set; }
+
+        public string CNP { get; set; } 
+        public string Address { get; set; } 
     }
 }
