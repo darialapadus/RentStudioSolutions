@@ -48,7 +48,11 @@ namespace RentStudio.DataAccesLayer
 
             modelBuilder.Entity<User>().ToTable("Users");
 
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasColumnType("decimal(18, 2)");
         }
+        public DbSet<Payment> Payments { get; set; }
 
     }
 }

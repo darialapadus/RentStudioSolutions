@@ -13,5 +13,11 @@ namespace RentStudio.Repositories.UserRepository
         Task<List<User>> FindAllActive();
 
         User Create(User user);
+        /*Task<User> FindByCNPAsync(string cNP);
+        Task AddAsync(User user);*/
+
+        User FindByCNP(string cnp);
+        void Add(User user);
+        void Save();
     }
 }
