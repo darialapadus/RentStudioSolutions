@@ -1,7 +1,9 @@
 ﻿using RentStudio.DataAccesLayer;
 using RentStudio.Helpers;
 using RentStudio.Models.DTOs;
+using RentStudio.Models.Enums;
 using RentStudio.Repositories.PaymentRepository;
+using RentStudio.Repositories.ReservationRepository;
 using RentStudio.Repositories.UserRepository;
 using RentStudio.Services.UserService;
 
@@ -11,10 +13,12 @@ namespace RentStudio.Services.PaymentService
     {
         private readonly IPaymentRepository _paymentRepository;
         private readonly IUserService _userService;
-        public PaymentService(IPaymentRepository paymentRepository, IUserService userService)
+        private readonly IReservationRepository _reservationRepository;
+        public PaymentService(IPaymentRepository paymentRepository, IUserService userService, IReservationRepository reservationRepository)
         {
             _paymentRepository = paymentRepository;
             _userService = userService;
+            _reservationRepository = reservationRepository;
 
         }
 
@@ -88,7 +92,7 @@ namespace RentStudio.Services.PaymentService
         public List<PaymentDetailsDTO> GetPaymentsByUserId(Guid userId)
         {
             var payments = _paymentRepository.GetPaymentsByUserId(userId);
-            var paymentDetails = payments.Select(p => new PaymentDetailsDTO
+            var paymentDetails = payments.Where(p => p.Status != PaymentStatus.Processed.ToString()).Select(p => new PaymentDetailsDTO
             {
                 NumberOfRooms = p.Reservation?.NumberOfRooms ?? 0,
                 PaymentDate = p.TransactionDate,

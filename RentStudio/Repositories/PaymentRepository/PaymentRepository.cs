@@ -36,6 +36,8 @@ namespace RentStudio.Repositories.PaymentRepository
         public List<Payment> GetPaymentsByUserId(Guid userId)
         {
             return _context.Payments
+                .Include(p => p.User)   //echivalentul unui join in sql intre Payments si User avand foreign key-ul UserId
+                .Include(p => p.Reservation)
                 .Where(p => p.UserId == userId)
                 .ToList();
         }

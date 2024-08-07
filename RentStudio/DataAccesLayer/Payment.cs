@@ -8,11 +8,11 @@ namespace RentStudio.DataAccesLayer
         [Key]
         public int PaymentId { get; set; }
 
-        [ForeignKey("User")]
+        [ForeignKey("UserId")]
         public Guid UserId { get; set; }
         public virtual User User { get; set; }
 
-        [ForeignKey("Reservation")]
+        [ForeignKey("ReservationId")]
         public int ReservationId { get; set; }
         public virtual Reservation Reservation { get; set; }
 
