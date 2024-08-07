@@ -8,6 +8,7 @@ namespace RentStudio.Repositories.PaymentRepository
         Task SaveAsync();
         Task<Payment> GetPaymentByUserIdAsync(Guid userId, int reservationId);
         List<Payment> GetPaymentsByUserId(Guid userId);
+        Task<List<Payment>> GetPaymentsAsync(Guid userId, int reservationId);
 
     }
 }

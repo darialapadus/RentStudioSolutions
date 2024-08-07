@@ -41,5 +41,11 @@ namespace RentStudio.Repositories.PaymentRepository
                 .Where(p => p.UserId == userId)
                 .ToList();
         }
+        public async Task<List<Payment>> GetPaymentsAsync(Guid userId, int reservationId)
+        {
+            var payment = await _context.Payments.Where(p => p.UserId == userId && p.ReservationId == reservationId).ToListAsync();
+            return payment;
+
+        }
     }
 }

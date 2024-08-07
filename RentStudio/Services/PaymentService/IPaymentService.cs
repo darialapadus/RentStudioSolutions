@@ -9,6 +9,6 @@ namespace RentStudio.Services.PaymentService
         Task SavePaymentAsync(Payment payment, bool isNew);
         Task<string> CheckPaymentStatusAsync(Guid userId, int reservationId);
         List<PaymentDetailsDTO> GetPaymentsByUserId(Guid userId);
-
+        Task<string> RefundPaymentAsync(Guid userId, int reservationId);
     }
 }

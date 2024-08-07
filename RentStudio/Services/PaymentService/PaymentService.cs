@@ -1,4 +1,5 @@
-﻿using RentStudio.DataAccesLayer;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using RentStudio.DataAccesLayer;
 using RentStudio.Helpers;
 using RentStudio.Models.DTOs;
 using RentStudio.Models.Enums;
@@ -101,6 +102,32 @@ namespace RentStudio.Services.PaymentService
             }).ToList();
 
             return paymentDetails;
+        }
+        public async Task<string> RefundPaymentAsync(Guid userId, int reservationId)
+        {
+            var payments = await _paymentRepository.GetPaymentsAsync(userId, reservationId);
+            var succeededRefunds = payments.Where(p => p.Status == PaymentStatus.Succeeded.ToString()).FirstOrDefault();
+            if(succeededRefunds == null)
+            {
+                return "Nu ai plata facuta pe aceasta rezervare!";
+            }
+            var paymentsRefunds = payments.Where(p => p.Status == "Refund").FirstOrDefault();
+            if (paymentsRefunds != null)
+            {
+                return "Refundul a fost deja facut!";
+            }
+            var refundPayment = new Payment
+            {
+                UserId = userId,
+                ReservationId = reservationId,
+                Amount = succeededRefunds.Amount,
+                Status = "Refund",
+                TransactionDate = DateTime.UtcNow
+            };
+            await _paymentRepository.AddAsync(refundPayment);
+            await _paymentRepository.SaveAsync();
+
+            return "Refundul a fost inregistrat!";
         }
     }
 

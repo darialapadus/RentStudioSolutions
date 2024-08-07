@@ -38,6 +38,13 @@ namespace RentStudio.Controllers
             var payments = _paymentService.GetPaymentsByUserId(userId);
             return Ok(payments);
         }
+
+        [HttpPost("refund-payments")]
+        public async Task<ActionResult<string>> PaymentRefund([FromQuery] Guid userId, [FromQuery] int reservationId)
+        { 
+            var refundStatus = await _paymentService.RefundPaymentAsync(userId, reservationId);
+            return Ok(refundStatus);
+        }
     }
 
 }
