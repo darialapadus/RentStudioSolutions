@@ -9,7 +9,6 @@ namespace RentStudio.DataAccesLayer
         public RentDbContext(DbContextOptions<RentDbContext> options) : base(options) 
         {
         }
-        //Aici vom specifica set-urile de date, corespondente cu tabele din baza de date, sub forma unor liste DbSet.
         public DbSet<Reservation> Reservations { get; set; }
 
         public DbSet<Room> Rooms { get; set; }

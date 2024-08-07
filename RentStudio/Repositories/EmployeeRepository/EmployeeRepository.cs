@@ -26,7 +26,6 @@ namespace RentStudio.Repositories.EmployeeRepository
         {
             return _context.Employees.Include(e => e.Hotel).ToList();
         }
-        //de facut si cu stored procedures
         public IEnumerable<Employee> GetEmployees(FilterEmployeeDTO filters)
         {
             var query = _context.Employees.AsQueryable();

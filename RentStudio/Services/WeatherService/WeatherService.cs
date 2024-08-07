@@ -59,12 +59,10 @@ namespace RentStudio.Services.WeatherService
     {
         public double Temp { get; set; }
         public double Pressure { get; set; }
-        // Add other properties as needed
     }
 
     public class WeatherInfo
     {
         public string Description { get; set; }
-        // Add other properties as needed
     }
 }

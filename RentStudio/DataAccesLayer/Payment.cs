@@ -19,6 +19,6 @@ namespace RentStudio.DataAccesLayer
         public decimal Amount { get; set; } 
         public string Status { get; set; }
 
-        public DateTime TransactionDate { get; set; } 
+        public DateTime TransactionDate { get; set; }
     }
 }

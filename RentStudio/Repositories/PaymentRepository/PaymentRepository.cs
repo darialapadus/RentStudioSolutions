@@ -33,5 +33,11 @@ namespace RentStudio.Repositories.PaymentRepository
             }
             return lastPayment;
         }
+        public List<Payment> GetPaymentsByUserId(Guid userId)
+        {
+            return _context.Payments
+                .Where(p => p.UserId == userId)
+                .ToList();
+        }
     }
 }
