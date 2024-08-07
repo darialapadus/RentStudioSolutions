@@ -16,12 +16,12 @@ namespace RentStudio.Controllers
         [HttpPost]
         public async Task<IActionResult>AddPayment([FromBody] PaymentDTO paymentDTO)
         {
-            if (!ModelState.IsValid) //add validation to DTO
+            if (!ModelState.IsValid) 
             {
                 return BadRequest(ModelState);
             }
 
-            await _paymentService.ProcessPaymentAsync(paymentDTO); //add async and await(add Task before IActionResult)
+            await _paymentService.ProcessPaymentAsync(paymentDTO); 
             return Ok(new { Message = "Payment processed successfully." });
         }
 
@@ -30,6 +30,13 @@ namespace RentStudio.Controllers
         {
             var status = await _paymentService.CheckPaymentStatusAsync(userId, reservationId);
             return Ok(status);
+        }
+
+        [HttpGet("user-payments/{userId}")]
+        public IActionResult GetUserPayments(Guid userId)
+        {
+            var payments = _paymentService.GetPaymentsByUserId(userId);
+            return Ok(payments);
         }
     }
 

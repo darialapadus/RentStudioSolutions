@@ -6,10 +6,8 @@
 
         public static async Task<string> BankProcessPaymentAsync()
         {
-            // Simulate a 3-second processing time
             await Task.Delay(3000);
 
-            // Generate a random response
             Random random = new Random();
             int responseIndex = random.Next(BankResponses.Length);
             string response = BankResponses[responseIndex];

@@ -45,16 +45,7 @@ namespace RentStudio.Repositories.UserRepository
             }
             return user;
         }
-        /* public async Task<User> FindByCNPAsync(string cnp)
-         {
-             return await _context.Users.SingleOrDefaultAsync(u => u.CNP == cnp);
-         }
-
-         public async Task AddAsync(User user)
-         {
-             await _context.Users.AddAsync(user);
-             await _context.SaveChangesAsync();
-         }*/
+       
         public User FindByCNP(string cnp)
         {
             return _context.Users.FirstOrDefault(u => u.CNP == cnp);

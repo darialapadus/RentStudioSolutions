@@ -46,8 +46,6 @@ namespace RentStudio.Services.PaymentService
             payment.Status = "Processed";
 
             await SavePaymentAsync(payment, false);
-
-
         }
         public async Task SavePaymentAsync(Payment payment, bool isNew)
         {
@@ -86,6 +84,19 @@ namespace RentStudio.Services.PaymentService
             {
                 throw new Exception("An error occurred while checking payment status.", ex);
             }
+        }
+        public List<PaymentDetailsDTO> GetPaymentsByUserId(Guid userId)
+        {
+            var payments = _paymentRepository.GetPaymentsByUserId(userId);
+            var paymentDetails = payments.Select(p => new PaymentDetailsDTO
+            {
+                NumberOfRooms = p.Reservation?.NumberOfRooms ?? 0,
+                PaymentDate = p.TransactionDate,
+                Amount = p.Amount,
+                Status = p.Status
+            }).ToList();
+
+            return paymentDetails;
         }
     }
 

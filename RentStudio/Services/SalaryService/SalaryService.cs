@@ -22,7 +22,6 @@ namespace RentStudio.Services.SalaryService
                 roleId = (int)role;
             }
 
-            //var employeeRole = _context.EmployeeRoles.FirstOrDefault(e => e.Name == employeePosition);
             var employeeRole = _context.EmployeeRoles.FirstOrDefault(e => e.Id == roleId);
 
             if (employeeRole != null)

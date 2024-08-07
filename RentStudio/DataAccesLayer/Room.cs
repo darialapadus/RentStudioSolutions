@@ -17,6 +17,6 @@ namespace RentStudio.DataAccesLayer
         [ForeignKey("HotelId")]
         public virtual Hotel Hotel { get; set; }
 
-        public virtual ICollection<BookedRoom> BookedRooms { get; set; } //add after
+        public virtual ICollection<BookedRoom> BookedRooms { get; set; } 
     }
 }
