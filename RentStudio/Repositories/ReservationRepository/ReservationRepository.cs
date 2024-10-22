@@ -142,6 +142,20 @@ namespace RentStudio.Repositories.ReservationRepository
 
             return reservationsWithDetails;
         }
+        public async Task<Reservation> GetReservationByIdAsync(int reservationId)
+        {
+            return await _context.Reservations.Where(x => x.ReservationId == reservationId).FirstOrDefaultAsync();
+        }
 
+        public async Task UpdateAsync(Reservation reservation)
+        {
+            _context.Reservations.Update(reservation); 
+            await _context.SaveChangesAsync(); 
+        }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync(); 
+        }
     }
 }

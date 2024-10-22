@@ -29,6 +29,5 @@ namespace RentStudio.DataAccesLayer
 
         public virtual ReservationDetail ReservationDetail { get; set; }
         public List<Payment> Payments { get; set; }
-
     }
 }

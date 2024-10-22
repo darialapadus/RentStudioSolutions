@@ -31,6 +31,8 @@
         Succeeded = 0,
         Failed = 1,
         InsufficientFunds = 2,
-        Processed = 3
+        Processed = 3,
+        Refund = 4,
+        Pending = 5,
     }
 }

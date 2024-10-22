@@ -47,5 +47,12 @@ namespace RentStudio.Repositories.PaymentRepository
             return payment;
 
         }
+
+        public async Task<List<Payment>> GetPaymentsByReservationIdAsync(int reservationId)
+        {
+            return await _context.Payments
+                .Where(p => p.ReservationId == reservationId)
+                .ToListAsync();
+        }
     }
 }

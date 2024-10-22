@@ -7,6 +7,7 @@ using RentStudio.Repositories.PaymentRepository;
 using RentStudio.Repositories.ReservationRepository;
 using RentStudio.Repositories.UserRepository;
 using RentStudio.Services.UserService;
+using static RentStudio.Helpers.Constants;
 
 namespace RentStudio.Services.PaymentService
 {
@@ -106,29 +107,30 @@ namespace RentStudio.Services.PaymentService
         public async Task<string> RefundPaymentAsync(Guid userId, int reservationId)
         {
             var payments = await _paymentRepository.GetPaymentsAsync(userId, reservationId);
-            var succeededRefunds = payments.Where(p => p.Status == PaymentStatus.Succeeded.ToString()).FirstOrDefault();
-            if(succeededRefunds == null)
+            var succeededRefunds = payments.FirstOrDefault(p => p.Status == PaymentStatus.Succeeded.ToString());
+            if (succeededRefunds == null)
             {
-                return "Nu ai plata facuta pe aceasta rezervare!";
+                return PaymentMessage.NoPaymentFound; 
             }
-            var paymentsRefunds = payments.Where(p => p.Status == "Refund").FirstOrDefault();
+            var paymentsRefunds = payments.FirstOrDefault(p => p.Status == PaymentStatus.Refund.ToString());
             if (paymentsRefunds != null)
             {
-                return "Refundul a fost deja facut!";
+                return PaymentMessage.RefundAlreadyProcessed; 
             }
             var refundPayment = new Payment
             {
                 UserId = userId,
                 ReservationId = reservationId,
                 Amount = succeededRefunds.Amount,
-                Status = "Refund",
+                Status = PaymentStatus.Refund.ToString(), 
                 TransactionDate = DateTime.UtcNow
             };
             await _paymentRepository.AddAsync(refundPayment);
             await _paymentRepository.SaveAsync();
 
-            return "Refundul a fost inregistrat!";
+            return PaymentMessage.RefundProcessed;
         }
+       
     }
 
 }

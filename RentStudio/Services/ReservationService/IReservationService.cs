@@ -11,5 +11,7 @@ namespace RentStudio.Services.ReservationService
         IEnumerable<GroupedReservationsByStatusDTO> GetGroupedReservationsByStatus();
         IEnumerable<ReservationDTO> GetConfirmedReservations();
         IEnumerable<ReservationDTO> GetReservationsWithDetails();
+        Task<string> UpdateReservationAndPaymentsAsync(UpdateReservationDTO updateReservationDTO);
+
     }
 }

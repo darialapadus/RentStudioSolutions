@@ -10,5 +10,12 @@
             public const string PaymentNotProcessed = "Payment not processed";
             public const string PaymentStatusNotChecked = "Payment status not checked";
         }
+
+        public static class PaymentMessage
+        {
+            public const string NoPaymentFound = "No payment has been made for this reservation!";
+            public const string RefundAlreadyProcessed = "The refund has already been processed!";
+            public const string RefundProcessed = "The refund has been successfully recorded!";
+        }
     }
 }

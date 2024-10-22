@@ -31,4 +31,10 @@ namespace RentStudio.Models.DTOs
         public string Status { get; set; }
         public List<ReservationDTO> Reservations { get; set; }
     }
+    public class UpdateReservationDTO
+    {
+        public int ReservationId { get; set; }
+        public int NumberOfRooms { get; set; }
+        public decimal NewAmount { get; set; }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using RentStudio.Models.DTOs;
+﻿using RentStudio.DataAccesLayer;
+using RentStudio.Models.DTOs;
 
 namespace RentStudio.Repositories.ReservationRepository
 {
@@ -11,5 +12,10 @@ namespace RentStudio.Repositories.ReservationRepository
         IEnumerable<GroupedReservationsByStatusDTO> GetReservationsGroupedByStatus();
         IEnumerable<ReservationDTO> GetConfirmedReservations();
         IEnumerable<ReservationDTO> GetReservationsWithDetails();
+        Task<Reservation> GetReservationByIdAsync(int reservationId);
+        Task UpdateAsync(Reservation reservation);
+        Task SaveAsync();
+   
+
     }
 }

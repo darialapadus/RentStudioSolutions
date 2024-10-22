@@ -65,6 +65,18 @@ namespace RentStudio.Controllers
             return Ok(reservationsWithDetails);
         }
 
+        [HttpPut("update-reservation-extra-payment")]
+        public async Task<IActionResult> UpdateReservationPayment([FromBody] UpdateReservationDTO updateReservationDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _reservationService.UpdateReservationAndPaymentsAsync(updateReservationDTO);
+            return Ok(result);
+        }
+
     }
 }
 
