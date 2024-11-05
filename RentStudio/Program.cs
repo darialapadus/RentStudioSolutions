@@ -32,6 +32,11 @@ using RentStudio.Services.AzureService;
 using RentStudio.Configurations;
 using RentStudio.Services.PaymentService;
 using RentStudio.Repositories.PaymentRepository;
+using RentStudio.Helpers.Middleware;
+using Serilog;
+using Quartz;
+using RentStudio.Services.EmailService;
+using RentStudio.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +90,31 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration) //Read Configuration From AppSettings
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("D:\\personalDatas\\log/log.txt", rollingInterval: RollingInterval.Day, shared: true)
+    .CreateLogger();
+
+builder.Services.AddQuartz(q =>
+{
+    q.UseMicrosoftDependencyInjectionJobFactory();
+
+    // Define the job and schedule it
+    var jobKey = new JobKey("LogMonitorJob");
+    q.AddJob<LogMonitorJob>(opts => opts.WithIdentity(jobKey));
+
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("LogMonitorTrigger")
+        .StartNow()
+        .WithSimpleSchedule(x => x.WithIntervalInMinutes(1).RepeatForever()));
+});
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+builder.Services.AddSingleton<EmailService>();
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
@@ -149,7 +179,7 @@ builder.Services.AddSwaggerGen(
         );
     }
 );
-
+builder.Host.UseSerilog();
 var app = builder.Build();
 
 
@@ -161,6 +191,8 @@ if (app.Environment.IsDevelopment())
     // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.)
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<JwtMiddleware>();
 
 app.UseHttpsRedirection();
@@ -180,3 +212,4 @@ app.MapControllerRoute(
 app.MapControllers();
 
 app.Run();
+Log.CloseAndFlush();

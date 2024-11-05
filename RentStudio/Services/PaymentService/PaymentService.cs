@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using RentStudio.DataAccesLayer;
 using RentStudio.Helpers;
+using RentStudio.Helpers.Middleware;
 using RentStudio.Models.DTOs;
 using RentStudio.Models.Enums;
 using RentStudio.Repositories.PaymentRepository;
@@ -16,12 +17,14 @@ namespace RentStudio.Services.PaymentService
         private readonly IPaymentRepository _paymentRepository;
         private readonly IUserService _userService;
         private readonly IReservationRepository _reservationRepository;
-        public PaymentService(IPaymentRepository paymentRepository, IUserService userService, IReservationRepository reservationRepository)
+        private readonly ILogger<ErrorHandlingMiddleware> _logger;
+
+        public PaymentService(IPaymentRepository paymentRepository, IUserService userService, IReservationRepository reservationRepository, ILogger<ErrorHandlingMiddleware> logger)
         {
             _paymentRepository = paymentRepository;
             _userService = userService;
             _reservationRepository = reservationRepository;
-
+            _logger = logger;
         }
 
         public async Task ProcessPaymentAsync(PaymentDTO paymentDTO)
@@ -106,27 +109,37 @@ namespace RentStudio.Services.PaymentService
         }
         public async Task<string> RefundPaymentAsync(Guid userId, int reservationId)
         {
-            var payments = await _paymentRepository.GetPaymentsAsync(userId, reservationId);
-            var succeededRefunds = payments.FirstOrDefault(p => p.Status == PaymentStatus.Succeeded.ToString());
-            if (succeededRefunds == null)
+            try
             {
-                return PaymentMessage.NoPaymentFound; 
+                throw new Exception();
+                var payments = await _paymentRepository.GetPaymentsAsync(userId, reservationId);
+                var succeededRefunds = payments.FirstOrDefault(p => p.Status == PaymentStatus.Succeeded.ToString());
+                if (succeededRefunds == null)
+                {
+                    return PaymentMessage.NoPaymentFound;
+                }
+                var paymentsRefunds = payments.FirstOrDefault(p => p.Status == PaymentStatus.Refund.ToString());
+                if (paymentsRefunds != null)
+                {
+                    return PaymentMessage.RefundAlreadyProcessed;
+                }
+                var refundPayment = new Payment
+                {
+                    UserId = userId,
+                    ReservationId = reservationId,
+                    Amount = succeededRefunds.Amount,
+                    Status = PaymentStatus.Refund.ToString(),
+                    TransactionDate = DateTime.UtcNow
+                };
+                await _paymentRepository.AddAsync(refundPayment);
+                await _paymentRepository.SaveAsync();
             }
-            var paymentsRefunds = payments.FirstOrDefault(p => p.Status == PaymentStatus.Refund.ToString());
-            if (paymentsRefunds != null)
+            catch (Exception ex) 
             {
-                return PaymentMessage.RefundAlreadyProcessed; 
+                //logam o eroare amanuntita, de ex un userId, reservationid, requestId etc, incercam sa folosim un Exception cat mai apropiat de datele noastre / mai multe catchuri
+                _logger.LogError(ex, "A refund payment with {param1} and {param2} failed.", userId, reservationId);
+                throw;
             }
-            var refundPayment = new Payment
-            {
-                UserId = userId,
-                ReservationId = reservationId,
-                Amount = succeededRefunds.Amount,
-                Status = PaymentStatus.Refund.ToString(), 
-                TransactionDate = DateTime.UtcNow
-            };
-            await _paymentRepository.AddAsync(refundPayment);
-            await _paymentRepository.SaveAsync();
 
             return PaymentMessage.RefundProcessed;
         }
