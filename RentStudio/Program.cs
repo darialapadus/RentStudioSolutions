@@ -95,7 +95,7 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration) //Read Configuration From AppSettings
     .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.File("D:\\personalDatas\\log/log.txt", rollingInterval: RollingInterval.Day, shared: true)
+    .WriteTo.File("C:\\personalDatas\\log/log.txt", rollingInterval: RollingInterval.Day, shared: true)
     .CreateLogger();
 
 builder.Services.AddQuartz(q =>

@@ -11,7 +11,7 @@ namespace RentStudio.Jobs
     public class LogMonitorJob : IJob
     {
         private readonly EmailService _emailService;
-        private readonly string _logDirectory = @"D:\personalDatas\log\"; // Directory where log files are stored
+        private readonly string _logDirectory = @"C:\personalDatas\log\"; // Directory where log files are stored
 
         public LogMonitorJob(EmailService emailService)
         {
@@ -46,7 +46,7 @@ namespace RentStudio.Jobs
 
                             // Send the filtered log lines via email
                             await _emailService.SendEmailWithAttachmentAsync(
-                                toEmail: "daria.lapadus17@gmail.com",
+                                toEmail: "daria.lapadus@gmail.com",
                                 subject: $"Error Logs for {DateTime.Now:yyyy-MM-dd}",
                                 body: logContent
                                 );
