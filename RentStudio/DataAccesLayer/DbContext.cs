@@ -53,5 +53,7 @@ namespace RentStudio.DataAccesLayer
         }
         public DbSet<Payment> Payments { get; set; }
 
+        public DbSet<PaymentsQueueMessage> PaymentsQueueMessages { get; set; }
+
     }
 }

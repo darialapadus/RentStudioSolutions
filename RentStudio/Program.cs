@@ -32,6 +32,8 @@ using RentStudio.Services.AzureService;
 using RentStudio.Configurations;
 using RentStudio.Services.PaymentService;
 using RentStudio.Repositories.PaymentRepository;
+using RentStudio.Services.PaymentQueueMessagesService;
+using RentStudio.Repositories.PaymentQueueMessagesRepository;
 using RentStudio.Helpers.Middleware;
 using Serilog;
 using Quartz;
@@ -86,8 +88,10 @@ builder.Services.AddScoped<WeatherService>();
 builder.Services.AddScoped<AzureService>();
 
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+
+builder.Services.AddScoped<IPaymentQueueMessagesRepository, PaymentQueueMessagesRepository>();
+builder.Services.AddScoped<IPaymentQueueMessagesService, PaymentQueueMessagesService>();
 
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 
@@ -106,11 +110,21 @@ builder.Services.AddQuartz(q =>
     var jobKey = new JobKey("LogMonitorJob");
     q.AddJob<LogMonitorJob>(opts => opts.WithIdentity(jobKey));
 
+    var jobPaymentKey = new JobKey("PaymentMonitorJob");
+    q.AddJob<PaymentMonitorJob>(opts => opts.WithIdentity(jobPaymentKey));
+
     q.AddTrigger(opts => opts
         .ForJob(jobKey)
         .WithIdentity("LogMonitorTrigger")
         .StartNow()
         .WithSimpleSchedule(x => x.WithIntervalInMinutes(1).RepeatForever()));
+
+    q.AddTrigger(opts => opts
+       .ForJob(jobPaymentKey)
+       .WithIdentity("PaymentTrigger")
+       .StartNow()
+       .WithSimpleSchedule(x => x.WithIntervalInMinutes(2).RepeatForever()));
+
 });
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
@@ -179,9 +193,18 @@ builder.Services.AddSwaggerGen(
         );
     }
 );
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("RentStudioFE",
+        policy => policy.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
+
 builder.Host.UseSerilog();
 var app = builder.Build();
-
+app.UseCors("RentStudioFE");
 
 
 // Configure the HTTP request pipeline.

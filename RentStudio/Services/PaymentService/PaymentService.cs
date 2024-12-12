@@ -4,11 +4,14 @@ using RentStudio.Helpers;
 using RentStudio.Helpers.Middleware;
 using RentStudio.Models.DTOs;
 using RentStudio.Models.Enums;
+using RentStudio.Repositories.PaymentQueueMessagesRepository;
 using RentStudio.Repositories.PaymentRepository;
 using RentStudio.Repositories.ReservationRepository;
 using RentStudio.Repositories.UserRepository;
+using RentStudio.Services.PaymentQueueMessagesService;
 using RentStudio.Services.UserService;
 using static RentStudio.Helpers.Constants;
+
 
 namespace RentStudio.Services.PaymentService
 {
@@ -18,13 +21,15 @@ namespace RentStudio.Services.PaymentService
         private readonly IUserService _userService;
         private readonly IReservationRepository _reservationRepository;
         private readonly ILogger<ErrorHandlingMiddleware> _logger;
+        private readonly IPaymentQueueMessagesService _paymentQueueMessagesService;
 
-        public PaymentService(IPaymentRepository paymentRepository, IUserService userService, IReservationRepository reservationRepository, ILogger<ErrorHandlingMiddleware> logger)
+        public PaymentService(IPaymentRepository paymentRepository, IUserService userService, IReservationRepository reservationRepository, ILogger<ErrorHandlingMiddleware> logger, IPaymentQueueMessagesService paymentQueueMessagesService)
         {
             _paymentRepository = paymentRepository;
             _userService = userService;
             _reservationRepository = reservationRepository;
             _logger = logger;
+            _paymentQueueMessagesService = paymentQueueMessagesService;
         }
 
         public async Task ProcessPaymentAsync(PaymentDTO paymentDTO)
@@ -55,6 +60,16 @@ namespace RentStudio.Services.PaymentService
             payment.Status = "Processed";
 
             await SavePaymentAsync(payment, false);
+
+            var paymentMessage = new PaymentsQueueMessage
+            {
+                UserId = paymentValidated.UserId,
+                ReservationId = paymentValidated.ReservationId,
+                Processed = false,
+                InsertDate = DateTime.UtcNow,
+                PaymentId = paymentValidated.PaymentId
+            };
+            await _paymentQueueMessagesService.AddAsync(paymentMessage);
         }
         public async Task SavePaymentAsync(Payment payment, bool isNew)
         {
@@ -94,6 +109,24 @@ namespace RentStudio.Services.PaymentService
                 throw new Exception("An error occurred while checking payment status.", ex);
             }
         }
+        public async Task<decimal> GetPaymentAmount(Guid userId, int reservationId)
+        {
+            try
+            {
+                var payment = await _paymentRepository.GetPaymentByUserIdAsync(userId, reservationId);
+
+                if (payment == null)
+                {
+                    throw new Exception("Payment not found");
+                }
+                return payment.Amount;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while checking payment status.", ex);
+            }
+        }
         public List<PaymentDetailsDTO> GetPaymentsByUserId(Guid userId)
         {
             var payments = _paymentRepository.GetPaymentsByUserId(userId);
@@ -107,11 +140,12 @@ namespace RentStudio.Services.PaymentService
 
             return paymentDetails;
         }
+       
         public async Task<string> RefundPaymentAsync(Guid userId, int reservationId)
         {
             try
             {
-                throw new Exception();
+                //throw new Exception();
                 var payments = await _paymentRepository.GetPaymentsAsync(userId, reservationId);
                 var succeededRefunds = payments.FirstOrDefault(p => p.Status == PaymentStatus.Succeeded.ToString());
                 if (succeededRefunds == null)

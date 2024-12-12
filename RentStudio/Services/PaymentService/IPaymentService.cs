@@ -10,6 +10,6 @@ namespace RentStudio.Services.PaymentService
         Task<string> CheckPaymentStatusAsync(Guid userId, int reservationId);
         List<PaymentDetailsDTO> GetPaymentsByUserId(Guid userId);
         Task<string> RefundPaymentAsync(Guid userId, int reservationId);
-
+        Task<decimal>GetPaymentAmount(Guid userId, int reservationId);
     }
 }
