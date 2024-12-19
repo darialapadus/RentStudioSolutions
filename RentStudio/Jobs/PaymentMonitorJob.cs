@@ -8,6 +8,7 @@ using RentStudio.Services.PaymentQueueMessagesService;
 using RentStudio.Services.PaymentService;
 using RentStudio.Services.UserService;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -38,15 +39,17 @@ namespace RentStudio.Jobs
         {
             try
             {
-                var unprocessedMessage = await _paymentQueueMessagesService.GetQueueMessagesAsync(batchSize);
+                var unprocessedMessage = await _paymentQueueMessagesService.GetQueueUnprocessedMessagesAsync(batchSize);
+                //var unprocessedMessage aduce un nr de elem din batchSize=2
                 foreach (var message in unprocessedMessage)
                 {
                     var user = await _userService.GetById(message.UserId);
                     var paymentAmount = await _paymentService.GetPaymentAmount(message.UserId, message.ReservationId);
+                    var paymentStatus = await _paymentService.CheckPaymentStatusAsync(message.UserId, message.ReservationId);
                     await _emailService.SendEmailWithAttachmentAsync(
                                 toEmail: user.Email,
-                                subject: $"Payment Processed - {user.FirstName + " " + user.LastName}",
-                                body: $"Payment with amount: {paymentAmount} for reservation {message.ReservationId} is being processed"
+                                subject: $"Payment - {paymentStatus} - {user.FirstName + " " + user.LastName}",
+                                body: $"Payment with amount: {paymentAmount} for reservation {message.ReservationId} with status {paymentStatus} has been processed"
                                 );
                     message.Processed = true;
                     message.ProcessedDate = DateTime.UtcNow;
@@ -58,7 +61,7 @@ namespace RentStudio.Jobs
                 // Handle exceptions (log or handle errors)
                 Console.WriteLine($"Error reading the payment db: {ex.Message}");
             }
-         
+
         }
     }
 }

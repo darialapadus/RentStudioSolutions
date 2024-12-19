@@ -26,5 +26,9 @@ namespace RentStudio.Services.PaymentQueueMessagesService
         {
             return await _paymentQueueMessagesRepository.GetQueueMessagesAsync(batchSize);
         }
+        public async Task<IEnumerable<PaymentsQueueMessage>> GetQueueUnprocessedMessagesAsync(int batchSize)
+        {
+            return await _paymentQueueMessagesRepository.GetQueueUnprocessedMessagesAsync(batchSize);
+        }
     }
 }

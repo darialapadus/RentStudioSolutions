@@ -117,13 +117,13 @@ builder.Services.AddQuartz(q =>
         .ForJob(jobKey)
         .WithIdentity("LogMonitorTrigger")
         .StartNow()
-        .WithSimpleSchedule(x => x.WithIntervalInMinutes(1).RepeatForever()));
+        .WithSimpleSchedule(x => x.WithIntervalInMinutes(10).RepeatForever()));
 
     q.AddTrigger(opts => opts
        .ForJob(jobPaymentKey)
        .WithIdentity("PaymentTrigger")
        .StartNow()
-       .WithSimpleSchedule(x => x.WithIntervalInMinutes(2).RepeatForever()));
+       .WithSimpleSchedule(x => x.WithIntervalInSeconds(30).RepeatForever()));
 
 });
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);

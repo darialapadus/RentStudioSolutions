@@ -47,7 +47,9 @@ namespace RentStudio.Services.UserService
                 LastName = userRegisterDto.LastName,
                 Email = userRegisterDto.Email,
                 Role = userRole,
-                Password = BCryptNet.HashPassword(userRegisterDto.Password)
+                Password = BCryptNet.HashPassword(userRegisterDto.Password),
+                Address = userRegisterDto.Address ?? "User didn't sent the address",
+                CNP = userRegisterDto.CNP
             };
 
             var isCreated = _userRepository.Create(userToCreate);

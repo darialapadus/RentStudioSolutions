@@ -26,6 +26,8 @@ namespace RentStudio.Helpers.Middleware
 
         private Task HandleExceptionAsync(HttpContext context, Exception exception) 
         {
+            
+            
             _logger.LogError(exception, "An error ocured.");
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Response.ContentType = "application/json";
